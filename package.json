@@ -2,7 +2,7 @@
   "name": "aws-lambda-helper",
   "version": "1.0.1",
   "description": "Collection of helper methods for lambda",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "nocov": "node ./node_modules/.bin/mocha --compilers js:babel-register test/*/*.js",
     "test": "npm run lint && npm run coverage",

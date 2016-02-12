@@ -7,7 +7,9 @@
     "nocov": "node ./node_modules/.bin/mocha --compilers js:babel-register test/*/*.js",
     "test": "npm run lint && npm run coverage",
     "coverage": "./node_modules/.bin/babel-node ./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha test/*/*.js --report lcovonly -- -R spec",
-    "lint": "eslint --fix *.js **/*.js **/test/**/*.js"
+    "lint": "eslint --fix *.js **/*.js **/test/**/*.js",
+    "compile": "babel -d lib/ src/",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",

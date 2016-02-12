@@ -13,9 +13,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/numo-labs/aws-lambda-helper.git"
+    "url": "https://github.com/tcdl/aws-lambda-helper.git"
   },
-  "homepage": "https://github.com/numo-labs/aws-lambda-helper",
+  "homepage": "https://github.com/tcdl/aws-lambda-helper",
   "devDependencies": {
     "eslint": "^1.10.3",
     "eslint-config-semistandard": "^5.0.0",

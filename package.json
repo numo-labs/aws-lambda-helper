@@ -1,0 +1,30 @@
+{
+  "name": "aws-lambda-helper",
+  "version": "0.0.1",
+  "description": "Collection of helper methods for lambda",
+  "main": "index.js",
+  "scripts": {
+    "nocov": "node ./node_modules/.bin/mocha --compilers js:babel-register test/*/*.js",
+    "test": "npm run lint && npm run coverage",
+    "coverage": "./node_modules/.bin/babel-node ./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha test/*/*.js --report lcovonly -- -R spec",
+    "lint": "eslint --fix *.js **/*.js **/test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/numo-labs/aws-lambda-helper.git"
+  },
+  "homepage": "https://github.com/numo-labs/aws-lambda-helper",
+  "devDependencies": {
+    "eslint": "^1.10.3",
+    "eslint-config-semistandard": "^5.0.0",
+    "babel-cli": "^6.4.5",
+    "babel-istanbul": "^0.6.0",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-plugin-transform-runtime": "^6.4.3",
+    "babel-register": "^6.4.3",
+    "mocha": "^2.4.5"
+  },
+  "dependencies": {
+    "tv4": "^1.2.7"
+  }
+}

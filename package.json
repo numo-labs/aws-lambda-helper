@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-helper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Collection of helper methods for lambda",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "test": "npm run lint && npm run coverage",
     "coverage": "./node_modules/.bin/babel-node ./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha test/*/*.js --report lcovonly -- -R spec",
     "lint": "eslint --fix *.js **/*.js **/test/**/*.js",
-    "compile": "babel -d lib/ src/",
+    "compile": "babel lib --out-dir src",
     "prepublish": "npm run compile"
   },
   "repository": {

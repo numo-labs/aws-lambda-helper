@@ -1,7 +1,7 @@
 'use strict';
 
 import assert from 'assert';
-import helper from '../../lib/index';
+import helper from '../../lib';
 import payloadSchema from '../fixtures/validationSchema';
 
 describe('validateWithSchema', () => {
@@ -18,7 +18,7 @@ describe('validateWithSchema', () => {
 
     helper.validateWithSchema(invalidData, payloadSchema, function (err, data) {
       assert.equal(err.message, 'Missing required property: param4');
-      assert.equal(data, undefined);
+      assert.equal(data, false);
       done();
     });
   });

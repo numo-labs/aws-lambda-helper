@@ -15,6 +15,7 @@
     "type": "git",
     "url": "https://github.com/tcdl/aws-lambda-helper.git"
   },
+  "license": "GPL-2.0",
   "homepage": "https://github.com/tcdl/aws-lambda-helper",
   "devDependencies": {
     "eslint": "^1.10.3",

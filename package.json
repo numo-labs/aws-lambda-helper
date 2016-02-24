@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-helper",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Collection of helper methods for lambda",
   "main": "src/index.js",
   "scripts": {

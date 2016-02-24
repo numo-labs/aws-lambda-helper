@@ -15,23 +15,22 @@ Function to get environment from context object
 
 Example:
 
-```
+```javascript
   const context = {
     invokedFunctionArn: 'arn:123:abs:prod'
   };
 
-  helper.getEnvironment(context, function (err, env) {
-    console.log(env);
-    //print 'prod'
-  });
+  var env = helper.getEnvironment(context); // 'prod';
 
 ```
+
+In case of incorrect context or misconfigured function ARN it will return `null`.
 
 ### validateWithSchema
 
 Function to validate input data with defined schema
 
-```
+```javascript
   import payloadSchema from '../schemas/validationSchema';
 
   const data = {
@@ -39,9 +38,16 @@ Function to validate input data with defined schema
     b: 'Hello World'
   };
 
-  helper.validateWithSchema(data, payloadSchema, function (err, valid) {
-    console.log(valid);
-    //print  'true'
-  });
+  var result = helper.validateWithSchema(data, payloadSchema); // true
 
+```
+
+In case of validation error it will **throw** an error, so for safest coding practices use `try/catch` statements.
+
+```javascript
+  try {
+    helper.validateWithSchema(data, payloadSchema);
+  } catch (error) {
+    // handle an error
+  }
 ```

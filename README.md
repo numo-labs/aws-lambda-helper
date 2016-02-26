@@ -6,7 +6,7 @@ Collection of helper methods for lambda
 `$ npm install aws-lambda-helper --save`
 
 ## Usage
-`const helper = require('aws-lambda-helper');`
+`var helper = require('aws-lambda-helper');`
 
 
 ### getEnvironment
@@ -16,7 +16,7 @@ Function to get environment from context object
 Example:
 
 ```javascript
-  const context = {
+  var context = {
     invokedFunctionArn: 'arn:123:abs:prod'
   };
 
@@ -33,7 +33,7 @@ Function to validate input data with defined schema
 ```javascript
   import payloadSchema from '../schemas/validationSchema';
 
-  const data = {
+  var data = {
     a: 1,
     b: 'Hello World'
   };

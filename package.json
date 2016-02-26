@@ -18,6 +18,7 @@
   "license": "GPL-2.0",
   "homepage": "https://github.com/tcdl/aws-lambda-helper",
   "devDependencies": {
+    "aws-sdk-mock": "^1.0.8",
     "babel-cli": "^6.4.5",
     "babel-istanbul": "^0.6.0",
     "babel-plugin-add-module-exports": "^0.1.2",
@@ -28,7 +29,5 @@
     "eslint-config-semistandard": "^5.0.0",
     "mocha": "^2.4.5"
   },
-  "dependencies": {
-    "tv4": "^1.2.7"
-  }
+  "dependencies": {}
 }

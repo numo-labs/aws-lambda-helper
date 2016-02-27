@@ -6,7 +6,7 @@
   "scripts": {
     "nocov": "node ./node_modules/.bin/mocha test/*/*.js",
     "test": "npm run lint && npm run coverage",
-    "coverage": "node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha test/*/*.js --report lcovonly -- -R spec",
+    "coverage": "node ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha test/*/*.js --report lcov -- -R spec",
     "lint": "node ./node_modules/eslint/bin/eslint.js --fix *.js **/*.js **/test/**/*.js"
   },
   "repository": {

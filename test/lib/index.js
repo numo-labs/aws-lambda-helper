@@ -54,6 +54,15 @@ describe('AWS Lambda helper', function () {
       done();
     });
 
+    it('config should be set to an empty object if undefined', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
+      };
+      var awsHelper = AwsHelper(awsMock, context);
+      assert.deepEqual(awsHelper._config, {});
+      done();
+    });
+
     // it('', function (done) {
     //   var context = {
     //     'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:447022989235:function:aws-canary-lambda:prod'

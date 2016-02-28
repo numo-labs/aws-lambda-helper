@@ -36,6 +36,15 @@ describe('AWS Lambda helper', function () {
       done();
     });
 
+    it('', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
+      };
+      var awsHelper = AwsHelper(awsMock, context, {});
+      assert.equal(awsHelper.env, 'prod');
+      done();
+    });
+
     it('should get environment variable from context', function (done) {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'

@@ -6,7 +6,7 @@ var awsMock = require('aws-sdk-mock');
 
 describe('AWS Lambda helper', function () {
   describe('getEnvironment', function () {
-    it('should throw error when invokedFunctionArn is invalid', (done) => {
+    it('should throw error when invokedFunctionArn is invalid', function (done) {
       var badContext = {
         invokedFunctionArn: 'arn:123:abs:prod'
       };
@@ -19,13 +19,13 @@ describe('AWS Lambda helper', function () {
       }
     });
 
-    it('should return null if invokedFunctionArn is not set in context', (done) => {
+    it('should return null if invokedFunctionArn is not set in context', function (done) {
       var env = AwsHelper.getEnvironment({});
       assert.equal(env, null);
       done();
     });
 
-    it('a valid ARN without environment should not set the env property', (done) => {
+    it('a valid ARN without environment should not set the env property', function (done) {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:mylambda'
       };
@@ -72,10 +72,7 @@ describe('AWS Lambda helper', function () {
       };
       var awsMock = require('aws-sdk-mock');
       // set up the mock for lambda invocation using aws-sdk-mock:
-      awsMock.mock('Lambda', 'invoke', function (err, data) {
-        console.log('err:', err);
-        console.log('data:', data);
-      });
+      awsMock.mock('Lambda', 'invoke', 'totes worked');
       // instantiate the helper module:
       AwsHelper(awsMock, context, {});
       // assert.equal(awsHelper.env, '$LATEST'); // confirm correctly instantiated
@@ -86,10 +83,10 @@ describe('AWS Lambda helper', function () {
         Qualifier: ''
       };
       AwsHelper.Lambda.invoke(params, function (err, data) {
-        console.log('err:', err);
-        console.log('data:', data);
+        assert(err === null);
+        assert(data === 'totes worked');
+        done();
       });
-      done();
     });
   });
 });

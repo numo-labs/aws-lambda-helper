@@ -1,12 +1,14 @@
 # aws-lambda-helper
 Collection of helper methods for lambda
 
+[![Build Status](https://travis-ci.org/tcdl/aws-lambda-helper.svg?branch=master)](https://travis-ci.org/tcdl/aws-lambda-helper)
+[![codecov.io](https://codecov.io/github/tcdl/aws-lambda-helper/coverage.svg?branch=master)](https://codecov.io/github/tcdl/aws-lambda-helper?branch=master)
 
 ## Installation
 `$ npm install aws-lambda-helper --save`
 
 ## Usage
-`const helper = require('aws-lambda-helper');`
+`var helper = require('aws-lambda-helper');`
 
 
 ### getEnvironment
@@ -16,7 +18,7 @@ Function to get environment from context object
 Example:
 
 ```javascript
-  const context = {
+  var context = {
     invokedFunctionArn: 'arn:123:abs:prod'
   };
 
@@ -33,7 +35,7 @@ Function to validate input data with defined schema
 ```javascript
   import payloadSchema from '../schemas/validationSchema';
 
-  const data = {
+  var data = {
     a: 1,
     b: 'Hello World'
   };

@@ -1,6 +1,8 @@
 # aws-lambda-helper
 Collection of helper methods for lambda
 
+[![Build Status](https://travis-ci.org/tcdl/aws-lambda-helper.svg?branch=master)](https://travis-ci.org/tcdl/aws-lambda-helper)
+[![codecov.io](https://codecov.io/github/tcdl/aws-lambda-helper/coverage.svg?branch=master)](https://codecov.io/github/tcdl/aws-lambda-helper?branch=master)
 
 ## Installation
 `$ npm install aws-lambda-helper --save`

@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var AwsHelper = require('./../../lib/index2');
+var AwsHelper = require('./../../lib/index');
 var awsMock = require('aws-sdk-mock');
 
 describe('AWS Lambda helper', function () {
@@ -54,10 +54,10 @@ describe('AWS Lambda helper', function () {
     });
   });
 
-  describe('invokeLambdaFunction', function () {
+  describe('AwsHelper.Lambda.invoke', function () {
     it('should throw an error if the params.FunctionName is not set', function (done) {
       try {
-        AwsHelper.invokeLambdaFunction();
+        AwsHelper.Lambda.invoke();
       } catch (e) {
         // console.log(e);
         var expected_err_msg = 'Error: params.FunctionName is required';
@@ -85,7 +85,7 @@ describe('AWS Lambda helper', function () {
         Payload: { 'hello': 'world' },
         Qualifier: ''
       };
-      AwsHelper.invokeLambdaFunction(params, function (err, data) {
+      AwsHelper.Lambda.invoke(params, function (err, data) {
         console.log('err:', err);
         console.log('data:', data);
       });

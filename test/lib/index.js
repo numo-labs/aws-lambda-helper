@@ -31,17 +31,7 @@ describe('AWS Lambda helper', function () {
       };
 
       var env = AwsHelper.getEnvironment(context);
-      console.log(env);
       assert.equal(env, null);
-      done();
-    });
-
-    it('', function (done) {
-      var context = {
-        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
-      };
-      var awsHelper = AwsHelper(awsMock, context, {});
-      assert.equal(awsHelper.env, 'prod');
       done();
     });
 
@@ -62,16 +52,44 @@ describe('AWS Lambda helper', function () {
       assert.deepEqual(awsHelper._config, {});
       done();
     });
+  });
 
-    // it('', function (done) {
-    //   var context = {
-    //     'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:447022989235:function:aws-canary-lambda:prod'
-    //   };
-    //   var awsHelper = AwsHelper(awsMock, context, {});
-    //
-    //   assert.equal(awsHelper.version, 'prod');
-    //   assert.equal(awsHelper.env, 'prod');
-    //   done();
-    // });
+  describe('invokeLambdaFunction', function () {
+    it('should throw an error if the params.FunctionName is not set', function (done) {
+      try {
+        AwsHelper.invokeLambdaFunction();
+      } catch (e) {
+        // console.log(e);
+        var expected_err_msg = 'Error: params.FunctionName is required';
+        assert(e.toString().indexOf(expected_err_msg) > -1);
+        done();
+      }
+    });
+
+    it('should (Mock) invoke the function (using aws-sdk-mock)', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda'
+      };
+      var awsMock = require('aws-sdk-mock');
+      // set up the mock for lambda invocation using aws-sdk-mock:
+      awsMock.mock('Lambda', 'invoke', function (err, data) {
+        console.log('err:', err);
+        console.log('data:', data);
+      });
+      // instantiate the helper module:
+      AwsHelper(awsMock, context, {});
+      // assert.equal(awsHelper.env, '$LATEST'); // confirm correctly instantiated
+
+      var params = {
+        FunctionName: 'MyAmazingLambda',
+        Payload: { 'hello': 'world' },
+        Qualifier: ''
+      };
+      AwsHelper.invokeLambdaFunction(params, function (err, data) {
+        console.log('err:', err);
+        console.log('data:', data);
+      });
+      done();
+    });
   });
 });

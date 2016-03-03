@@ -10,8 +10,16 @@ Collection of helper methods for lambda
 ## Usage
 `var helper = require('aws-lambda-helper');`
 
+Initialise the helper inside the lambda function by passing in the context object. This returns an object with the following properties
 
-### getEnvironment
+
+
+`var aws = helper(context);`
+
+##
+
+
+### **Deprecated** : getEnvironment
 
 Function to get environment from context object
 
@@ -24,32 +32,4 @@ Example:
 
   var env = helper.getEnvironment(context); // 'prod';
 
-```
-
-In case of incorrect context or misconfigured function ARN it will return `null`.
-
-### validateWithSchema
-
-Function to validate input data with defined schema
-
-```javascript
-  import payloadSchema from '../schemas/validationSchema';
-
-  var data = {
-    a: 1,
-    b: 'Hello World'
-  };
-
-  var result = helper.validateWithSchema(data, payloadSchema); // true
-
-```
-
-In case of validation error it will **throw** an error, so for safest coding practices use `try/catch` statements.
-
-```javascript
-  try {
-    helper.validateWithSchema(data, payloadSchema);
-  } catch (error) {
-    // handle an error
-  }
 ```

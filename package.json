@@ -24,6 +24,5 @@
   },
   "dependencies": {
     "aws-sdk": "^2.2.40",
-    "aws-sdk-mock": "^1.0.9"
   }
 }

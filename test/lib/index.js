@@ -1,76 +1,92 @@
 'use strict';
 
-import assert from 'assert';
-import helper from '../../lib';
-import payloadSchema from '../fixtures/validationSchema';
+var assert = require('assert');
+var AwsHelper = require('./../../lib/index');
+var awsMock = require('aws-sdk-mock');
 
-describe('AWS Lambda helper', () => {
-  describe('validateWithSchema', () => {
-    it('should throw error for invalid data', (done) => {
-      const invalidData = {
-        body: {
-          docs: [{
-            param1: 'value1',
-            param2: ['123', '456'],
-            param3: 'standard'
-          }]
-        }
+describe('AWS Lambda helper', function () {
+  describe('getEnvironment', function () {
+    it('should throw error when invokedFunctionArn is invalid', function (done) {
+      var badContext = {
+        invokedFunctionArn: 'arn:123:abs:prod'
       };
-
       try {
-        let result = helper.validateWithSchema(invalidData, payloadSchema);
-        done(result);
-      } catch (error) {
-        assert.equal(error.message, 'Missing required property: param4');
+        AwsHelper.getEnvironment(badContext);
+      } catch (e) {
+        var expected_err_msg = 'Error: Unexpected invokedFunctionArn format';
+        assert(e.toString().indexOf(expected_err_msg) > -1);
         done();
       }
     });
 
-    it('should return true for valid data', (done) => {
-      const validData = {
-        body: {
-          docs: [{
-            param1: 'value1',
-            param2: ['123', '456'],
-            param3: 'standard',
-            param4: 5
-          }]
-        }
+    it('should return null if invokedFunctionArn is not set in context', function (done) {
+      var env = AwsHelper.getEnvironment({});
+      assert.equal(env, null);
+      done();
+    });
+
+    it('a valid ARN without environment should not set the env property', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:mylambda'
       };
 
-      let result = helper.validateWithSchema(validData, payloadSchema);
-      assert.equal(result, true);
+      var env = AwsHelper.getEnvironment(context);
+      assert.equal(env, null);
+      done();
+    });
+
+    it('should get environment variable from context', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
+      };
+      var awsHelper = AwsHelper(awsMock, context, {});
+      assert.equal(awsHelper.env, 'prod');
+      done();
+    });
+
+    it('config should be set to an empty object if undefined', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
+      };
+      var awsHelper = AwsHelper(awsMock, context);
+      assert.deepEqual(awsHelper._config, {});
       done();
     });
   });
 
-  describe('getEnvironment', () => {
-    it('should get environment variable from context', (done) => {
-      const context = {
-        invokedFunctionArn: 'arn:123:abs:prod'
-      };
-
-      let env = helper.getEnvironment(context);
-      assert.equal(env, 'prod');
-      done();
+  describe('AwsHelper.Lambda.invoke', function () {
+    it('should throw an error if the params.FunctionName is not set', function (done) {
+      try {
+        AwsHelper.Lambda.invoke();
+      } catch (e) {
+        // console.log(e);
+        var expected_err_msg = 'Error: params.FunctionName is required';
+        assert(e.toString().indexOf(expected_err_msg) > -1);
+        done();
+      }
     });
 
-    it('should return null if invokedFunctionArn does not exist in context', (done) => {
-      let env = helper.getEnvironment({});
-
-      assert.equal(env, null);
-      done();
-    });
-
-    it('should return null if evn does not exist in invokedFunctionArn', (done) => {
-      const badContext = {
-        invokedFunctionArn: 'arn_123abs_prod:'
+    it('should (Mock) invoke the function (using aws-sdk-mock)', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda'
       };
+      var awsMock = require('aws-sdk-mock');
+      // set up the mock for lambda invocation using aws-sdk-mock:
+      awsMock.mock('Lambda', 'invoke', 'totes worked');
+      // instantiate the helper module:
+      AwsHelper(awsMock, context, {});
+      // assert.equal(awsHelper.env, '$LATEST'); // confirm correctly instantiated
 
-      let env = helper.getEnvironment(badContext);
-
-      assert.equal(env, null);
-      done();
+      var params = {
+        FunctionName: 'MyAmazingLambda',
+        Payload: { 'hello': 'world' },
+        Qualifier: ''
+      };
+      AwsHelper.Lambda.invoke(params, function (err, data) {
+        assert(err === null);
+        assert(data === 'totes worked');
+        done();
+      });
     });
   });
 });

@@ -2,7 +2,7 @@
 
 var assert = require('assert');
 var AwsHelper = require('./../../lib/index');
-var awsMock = require('aws-sdk-mock');
+var AWS = require('aws-sdk');
 
 describe('AWS Lambda helper', function () {
   describe('getEnvironment', function () {
@@ -39,8 +39,11 @@ describe('AWS Lambda helper', function () {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      var awsHelper = AwsHelper(awsMock, context, {});
+      var awsHelper = AwsHelper(AWS, context, {});
       assert.equal(awsHelper.env, 'prod');
+      assert.equal(awsHelper.account, '123456789');
+      assert.equal(awsHelper.version, 'prod');
+      assert.equal(awsHelper.region, 'eu-west-1');
       done();
     });
 
@@ -48,7 +51,7 @@ describe('AWS Lambda helper', function () {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      var awsHelper = AwsHelper(awsMock, context);
+      var awsHelper = AwsHelper(AWS, context);
       assert.deepEqual(awsHelper._config, {});
       done();
     });
@@ -59,30 +62,45 @@ describe('AWS Lambda helper', function () {
       try {
         AwsHelper.Lambda.invoke();
       } catch (e) {
-        // console.log(e);
         var expected_err_msg = 'Error: params.FunctionName is required';
         assert(e.toString().indexOf(expected_err_msg) > -1);
         done();
       }
     });
 
-    it('should (Mock) invoke the function (using aws-sdk-mock)', function (done) {
+    it('should invoke the Lambda function MyAmazingLambda (using mock)', function (done) {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda'
       };
-      var awsMock = require('aws-sdk-mock');
-      // set up the mock for lambda invocation using aws-sdk-mock:
-      awsMock.mock('Lambda', 'invoke', 'totes worked');
-      // instantiate the helper module:
-      AwsHelper(awsMock, context, {});
-      // assert.equal(awsHelper.env, '$LATEST'); // confirm correctly instantiated
+
+      var awsMock = {
+        config: {},
+        Lambda: function () {
+          return {
+            invoke: function (params, cb) {
+              var p = {
+                FunctionName: '123456789:MyAmazingLambda',
+                InvocationType: 'RequestResponse',
+                Payload: JSON.stringify({ 'hello': 'world' }),
+                Qualifier: '$LATEST',
+                LogType: 'None'
+              };
+              assert.deepEqual(p, params);
+              cb(null, 'totes worked');
+            }
+          };
+        }
+      };
+
+      var awsHelper = AwsHelper(awsMock, context, {});
+      assert.equal(awsHelper.version, '$LATEST'); // confirm correctly instantiated
 
       var params = {
         FunctionName: 'MyAmazingLambda',
         Payload: { 'hello': 'world' },
         Qualifier: ''
       };
-      AwsHelper.Lambda.invoke(params, function (err, data) {
+      awsHelper.Lambda.invoke(params, function (err, data) {
         assert(err === null);
         assert(data === 'totes worked');
         done();

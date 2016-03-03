@@ -8,48 +8,40 @@ Collection of helper methods for lambda
 `$ npm install aws-lambda-helper --save`
 
 ## Usage
-`var helper = require('aws-lambda-helper');`
-
-
-### getEnvironment
-
-Function to get environment from context object
-
-Example:
 
 ```javascript
-  var context = {
-    invokedFunctionArn: 'arn:123:abs:prod'
-  };
+  var AwsHelper = require('aws-lambda-helper');
+  var AWS = require('aws-sdk');
 
-  var env = helper.getEnvironment(context); // 'prod';
-
+  //Initialise the helper by passing in aws-sdk and context 
+  var awsHelper = AwsHelper(AWS, context);
 ```
 
-In case of incorrect context or misconfigured function ARN it will return `null`.
-
-### validateWithSchema
-
-Function to validate input data with defined schema
+### Invoke a Lamda function 
 
 ```javascript
-  import payloadSchema from '../schemas/validationSchema';
 
-  var data = {
-    a: 1,
-    b: 'Hello World'
-  };
+  var AwsHelper = require('aws-lambda-helper');
+  var AWS = require('aws-sdk');
 
-  var result = helper.validateWithSchema(data, payloadSchema); // true
+  exports.handler = function(event, context){
+    // assume : context.invokedFunctionArn = invokedFunctionArn: 'arn:aws:lambda:eu-west-1:123456789:function:mylambda:prod'
+    
+    //Initialise the helper by passing in aws-sdk and context
+    var awsHelper = AwsHelper(AWS, context);
 
-```
+    console.log(awsHelper.env); //prints: prod
+    console.log(awsHelper.region); //prints: eu-west-1
+    console.log(awsHelper.region); //prints: 123456789
 
-In case of validation error it will **throw** an error, so for safest coding practices use `try/catch` statements.
-
-```javascript
-  try {
-    helper.validateWithSchema(data, payloadSchema);
-  } catch (error) {
-    // handle an error
+    var params = {
+        FunctionName: 'MyAmazingLambda',
+        Payload: { 'hello': 'world' },
+        Qualifier: ''
+      };
+    awsHelper.Lambda.invoke(params, function (err, data) {
+      if(err) return context.fail(err);
+      context.succeed(data);
+    });
   }
-```
+``

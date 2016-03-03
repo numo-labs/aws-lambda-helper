@@ -48,6 +48,18 @@ describe('AWS Lambda helper', function () {
     });
   });
 
+  describe('initHelper', function () {
+    it('should throw an error if the context parameter is not passed in', function (done) {
+      try {
+        AwsHelper();
+      } catch (e) {
+        var expected_err_msg = 'context is required';
+        assert(e.message.indexOf(expected_err_msg) > -1);
+        done();
+      }
+    });
+  });
+
   describe('aws.Lambda.invoke', function () {
     it('should throw an error if the params.FunctionName is not set', function (done) {
       try {

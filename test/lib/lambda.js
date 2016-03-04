@@ -94,24 +94,14 @@ describe('AwsHelper.Lambda', function () {
       });
     });
 
-    it('should invoke the Lambda function MyAmazingLambda (no mock)', function (done) {
+    it('should create a Lambda object when not initiated', function (done) {
       var context = {
-        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda'
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-
       var awsHelper = AwsHelper(context);
-      assert.equal(awsHelper.version, '$LATEST'); // confirm correctly instantiated
-
-      var params = {
-        FunctionName: 'MyAmazingLambda',
-        Payload: { 'hello': 'world' },
-        Qualifier: ''
-      };
-
-      awsHelper.Lambda.invoke(params, function (err, data) {
-        assert(err.toString().indexOf('InvalidParameterValueException') > -1);
-        done();
-      });
+      awsHelper._initLambdaObject();
+      assert(awsHelper._Lambda != null);
+      done();
     });
   });
 });

@@ -20,6 +20,7 @@
     "eslint": "^1.10.3",
     "eslint-config-semistandard": "^5.0.0",
     "istanbul": "^0.4.2",
-    "mocha": "^2.4.5"
+    "mocha": "^2.4.5",
+    "simple-mock": "^0.6.0"
   }
 }

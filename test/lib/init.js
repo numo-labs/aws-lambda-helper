@@ -33,7 +33,7 @@ describe('_parseInvokedFunctionArn', function () {
     try {
       awsHelper._parseInvokedFunctionArn(null);
     } catch (e) {
-      var expected_err_msg = 'Error: Unexpected invokedFunctionArn format';
+      var expected_err_msg = 'invokedFunctionArn needs to be specified:';
       assert(e.toString().indexOf(expected_err_msg) > -1);
       done();
     }

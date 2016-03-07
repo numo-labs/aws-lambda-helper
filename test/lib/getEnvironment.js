@@ -31,11 +31,11 @@ describe('getEnvironment', function () {
     var context = {
       'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
     };
-    var awsHelper = AwsHelper(context);
-    assert.equal(awsHelper.env, 'prod');
-    assert.equal(awsHelper.account, '123456789');
-    assert.equal(awsHelper.version, 'prod');
-    assert.equal(awsHelper.region, 'eu-west-1');
+    AwsHelper.init(context);
+    assert.equal(AwsHelper.env, 'prod');
+    assert.equal(AwsHelper.account, '123456789');
+    assert.equal(AwsHelper.version, 'prod');
+    assert.equal(AwsHelper.region, 'eu-west-1');
     done();
   });
 });

@@ -8,28 +8,40 @@ Collection of helper methods for lambda
 `$ npm install aws-lambda-helper --save`
 
 ## Usage
-`var helper = require('aws-lambda-helper');`
-
-Initialise the helper inside the lambda function by passing in the context object. This returns an object with the following properties
-
-
-
-`var aws = helper(context);`
-
-##
-
-
-### **Deprecated** : getEnvironment
-
-Function to get environment from context object
-
-Example:
 
 ```javascript
-  var context = {
-    invokedFunctionArn: 'arn:123:abs:prod'
-  };
+  var AwsHelper = require('aws-lambda-helper');
+  var AWS = require('aws-sdk');
 
-  var env = helper.getEnvironment(context); // 'prod';
-
+  //Initialise the helper by passing in aws-sdk and context 
+  var awsHelper = AwsHelper(AWS, context);
 ```
+
+### Invoke a Lamda function 
+
+```javascript
+
+  var AwsHelper = require('aws-lambda-helper');
+  var AWS = require('aws-sdk');
+
+  exports.handler = function(event, context){
+    // assume : context.invokedFunctionArn = invokedFunctionArn: 'arn:aws:lambda:eu-west-1:123456789:function:mylambda:prod'
+    
+    //Initialise the helper by passing in aws-sdk and context
+    var awsHelper = AwsHelper(AWS, context);
+
+    console.log(awsHelper.env); //prints: prod
+    console.log(awsHelper.region); //prints: eu-west-1
+    console.log(awsHelper.region); //prints: 123456789
+
+    var params = {
+        FunctionName: 'MyAmazingLambda',
+        Payload: { 'hello': 'world' },
+        Qualifier: ''
+      };
+    awsHelper.Lambda.invoke(params, function (err, data) {
+      if(err) return context.fail(err);
+      context.succeed(data);
+    });
+  }
+``

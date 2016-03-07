@@ -1,8 +1,8 @@
 # aws-lambda-helper
 Collection of helper methods for lambda
 
-[![Build Status](https://travis-ci.org/tcdl/aws-lambda-helper.svg?branch=master)](https://travis-ci.org/tcdl/aws-lambda-helper)
-[![codecov.io](https://codecov.io/github/tcdl/aws-lambda-helper/coverage.svg?branch=master)](https://codecov.io/github/tcdl/aws-lambda-helper?branch=master)
+[![Build Status](https://travis-ci.org/numo-labs/aws-lambda-helper.svg?branch=master)](https://travis-ci.org/numo-labs/aws-lambda-helper)
+[![codecov.io](https://codecov.io/github/numo-labs/aws-lambda-helper/coverage.svg?branch=master)](https://codecov.io/github/numo-labs/aws-lambda-helper?branch=master)
 
 ## Installation
 `$ npm install aws-lambda-helper --save`
@@ -11,13 +11,16 @@ Collection of helper methods for lambda
 
 ```javascript
   var AwsHelper = require('aws-lambda-helper');
-  var AWS = require('aws-sdk');
 
-  //Initialise the helper by passing in aws-sdk and context 
-  var awsHelper = AwsHelper(AWS, context);
+  exports.handler = function(event, context) {
+    ...
+    //Initialise the helper by passing in the context
+    var awsHelper = AwsHelper(context);
+    ...
+  }
 ```
 
-### Invoke a Lamda function 
+### Invoke a Lamda function
 
 ```javascript
 
@@ -26,9 +29,9 @@ Collection of helper methods for lambda
 
   exports.handler = function(event, context){
     // assume : context.invokedFunctionArn = invokedFunctionArn: 'arn:aws:lambda:eu-west-1:123456789:function:mylambda:prod'
-    
-    //Initialise the helper by passing in aws-sdk and context
-    var awsHelper = AwsHelper(AWS, context);
+
+    //Initialise the helper by passing in the context
+    var awsHelper = AwsHelper(context);
 
     console.log(awsHelper.env); //prints: prod
     console.log(awsHelper.region); //prints: eu-west-1
@@ -44,4 +47,6 @@ Collection of helper methods for lambda
       context.succeed(data);
     });
   }
-``
+```
+
+### Invoke a Lamda function

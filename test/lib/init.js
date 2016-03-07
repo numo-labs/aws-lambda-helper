@@ -9,13 +9,13 @@ describe('_parseInvokedFunctionArn', function () {
     var context = {
       'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
     };
-    var awsHelper = AwsHelper(context);
+    AwsHelper.init(context);
     // now test the specific function with a bad context
     var badContext = {
       invokedFunctionArn: 'arn:123:abs:prod'
     };
     try {
-      awsHelper._parseInvokedFunctionArn(badContext.invokedFunctionArn);
+      AwsHelper._parseInvokedFunctionArn(badContext.invokedFunctionArn);
     } catch (e) {
       var expected_err_msg = 'Error: Unexpected invokedFunctionArn format';
       assert(e.toString().indexOf(expected_err_msg) > -1);
@@ -28,10 +28,10 @@ describe('_parseInvokedFunctionArn', function () {
     var context = {
       'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
     };
-    var awsHelper = AwsHelper(context);
+    AwsHelper.init(context);
     // now test the specific function with a empty invokedFunctionArn
     try {
-      awsHelper._parseInvokedFunctionArn(null);
+      AwsHelper._parseInvokedFunctionArn(null);
     } catch (e) {
       var expected_err_msg = 'invokedFunctionArn needs to be specified:';
       assert(e.toString().indexOf(expected_err_msg) > -1);

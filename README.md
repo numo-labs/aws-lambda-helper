@@ -15,7 +15,7 @@ Collection of helper methods for lambda
   exports.handler = function(event, context) {
     ...
     //Initialise the helper by passing in the context
-    var awsHelper = AwsHelper(context);
+    AwsHelper.init(context);
     ...
   }
 ```
@@ -25,28 +25,25 @@ Collection of helper methods for lambda
 ```javascript
 
   var AwsHelper = require('aws-lambda-helper');
-  var AWS = require('aws-sdk');
 
   exports.handler = function(event, context){
     // assume : context.invokedFunctionArn = invokedFunctionArn: 'arn:aws:lambda:eu-west-1:123456789:function:mylambda:prod'
 
     //Initialise the helper by passing in the context
-    var awsHelper = AwsHelper(context);
+    AwsHelper.init(context);
 
-    console.log(awsHelper.env); //prints: prod
-    console.log(awsHelper.region); //prints: eu-west-1
-    console.log(awsHelper.region); //prints: 123456789
+    console.log(AwsHelper.env); //prints: prod
+    console.log(AwsHelper.region); //prints: eu-west-1
+    console.log(AwsHelper.account); //prints: 123456789
 
     var params = {
         FunctionName: 'MyAmazingLambda',
         Payload: { 'hello': 'world' },
         Qualifier: ''
       };
-    awsHelper.Lambda.invoke(params, function (err, data) {
+    AwsHelper.Lambda.invoke(params, function (err, data) {
       if(err) return context.fail(err);
       context.succeed(data);
     });
   }
 ```
-
-### Invoke a Lamda function

@@ -15,8 +15,8 @@ describe('AwsHelper.DynamoDB', function () {
         var context = {
           'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
         };
-        var awsHelper = AwsHelper(context);
-        awsHelper.DynamoDB.putItem();
+        AwsHelper.init(context);
+        AwsHelper.DynamoDB.putItem();
       } catch (e) {
         console.log(e);
         var expected_err_msg = 'params.TableName is required';
@@ -29,9 +29,9 @@ describe('AwsHelper.DynamoDB', function () {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      var awsHelper = AwsHelper(context);
-      awsHelper._initDynamoDBObject();
-      assert(awsHelper._DynamoDB != null);
+      AwsHelper.init(context);
+      AwsHelper._initDynamoDBObject();
+      assert(AwsHelper._DynamoDB != null);
       done();
     });
 
@@ -39,11 +39,11 @@ describe('AwsHelper.DynamoDB', function () {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      var awsHelper = AwsHelper(context);
-      awsHelper._DynamoDB = new awsHelper._AWS.DynamoDB();
+      AwsHelper.init(context);
+      AwsHelper._DynamoDB = new AwsHelper._AWS.DynamoDB();
 
       // stub the SNS.publish function
-      simple.mock(awsHelper._DynamoDB, 'putItem').callFn(function (params, cb) {
+      simple.mock(AwsHelper._DynamoDB, 'putItem').callFn(function (params, cb) {
         var p = {
           TableName: 'mock-table-name-prod',
           Item: {}
@@ -57,7 +57,7 @@ describe('AwsHelper.DynamoDB', function () {
         Item: {}
       };
 
-      awsHelper.DynamoDB.putItem(params, function (err, data) {
+      AwsHelper.DynamoDB.putItem(params, function (err, data) {
         assert(err === null);
         assert(data.Items != null);
         done();
@@ -68,11 +68,11 @@ describe('AwsHelper.DynamoDB', function () {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      var awsHelper = AwsHelper(context);
-      awsHelper._DynamoDB = new awsHelper._AWS.DynamoDB();
+      AwsHelper.init(context);
+      AwsHelper._DynamoDB = new AwsHelper._AWS.DynamoDB();
 
       // stub the SNS.publish function
-      simple.mock(awsHelper._DynamoDB, 'putItem').callFn(function (params, cb) {
+      simple.mock(AwsHelper._DynamoDB, 'putItem').callFn(function (params, cb) {
         var p = {
           TableName: 'mock-table-name-prod',
           Item: {}
@@ -86,7 +86,7 @@ describe('AwsHelper.DynamoDB', function () {
         Item: {}
       };
 
-      awsHelper.DynamoDB.putItem(params, function (err, data) {
+      AwsHelper.DynamoDB.putItem(params, function (err, data) {
         assert(err === null);
         assert(data.Items != null);
         done();

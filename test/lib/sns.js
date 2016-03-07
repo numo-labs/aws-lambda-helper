@@ -15,8 +15,8 @@ describe('AwsHelper.SNS', function () {
         var context = {
           'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
         };
-        var awsHelper = AwsHelper(context);
-        awsHelper.SNS.publish();
+        AwsHelper.init(context);
+        AwsHelper.SNS.publish();
       } catch (e) {
         var expected_err_msg = 'params.TopicArn is required';
         assert(e.message.indexOf(expected_err_msg) > -1);
@@ -28,9 +28,9 @@ describe('AwsHelper.SNS', function () {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      var awsHelper = AwsHelper(context);
-      awsHelper._initSNSObject();
-      assert(awsHelper._SNS != null);
+      AwsHelper.init(context);
+      AwsHelper._initSNSObject();
+      assert(AwsHelper._SNS != null);
       done();
     });
 
@@ -38,11 +38,11 @@ describe('AwsHelper.SNS', function () {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      var awsHelper = AwsHelper(context);
-      awsHelper._SNS = new awsHelper._AWS.SNS();
+      AwsHelper.init(context);
+      AwsHelper._SNS = new AwsHelper._AWS.SNS();
 
       // stub the SNS.publish function
-      simple.mock(awsHelper._SNS, 'publish').callFn(function (params, cb) {
+      simple.mock(AwsHelper._SNS, 'publish').callFn(function (params, cb) {
         var topic = 'arn:aws:sns:eu-west-1:123456789:my-awesome-topic-prod';
         var p = {
           Message: params.Message,
@@ -60,7 +60,7 @@ describe('AwsHelper.SNS', function () {
         Message: JSON.stringify({name: 'name'}),
         TopicArn: 'arn:aws:sns:eu-west-1:123456789:my-awesome-topic-prod'
       };
-      awsHelper.SNS.publish(params, function (err, data) {
+      AwsHelper.SNS.publish(params, function (err, data) {
         assert(err === null);
         assert(data.MessageId === 'mock-message-id');
         done();
@@ -71,11 +71,11 @@ describe('AwsHelper.SNS', function () {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      var awsHelper = AwsHelper(context);
-      awsHelper._SNS = new awsHelper._AWS.SNS();
+      AwsHelper.init(context);
+      AwsHelper._SNS = new AwsHelper._AWS.SNS();
 
       // stub the SNS.publish function
-      simple.mock(awsHelper._SNS, 'publish').callFn(function (params, cb) {
+      simple.mock(AwsHelper._SNS, 'publish').callFn(function (params, cb) {
         var topic = 'arn:aws:sns:eu-west-1:123456789:my-awesome-topic-prod';
         var p = {
           Message: params.Message,
@@ -93,7 +93,7 @@ describe('AwsHelper.SNS', function () {
         Message: JSON.stringify({name: 'name'}),
         TopicArn: 'my-awesome-topic'
       };
-      awsHelper.SNS.publish(params, function (err, data) {
+      AwsHelper.SNS.publish(params, function (err, data) {
         assert(err === null);
         assert(data.MessageId === 'mock-message-id');
         done();

@@ -15,8 +15,8 @@ describe('AwsHelper.Lambda', function () {
         var context = {
           'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
         };
-        var awsHelper = AwsHelper(context);
-        awsHelper.Lambda.invoke();
+        AwsHelper.init(context);
+        AwsHelper.Lambda.invoke();
       } catch (e) {
         var expected_err_msg = 'Error: params.FunctionName is required';
         assert(e.toString().indexOf(expected_err_msg) > -1);
@@ -29,11 +29,11 @@ describe('AwsHelper.Lambda', function () {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda'
       };
 
-      var awsHelper = AwsHelper(context);
-      awsHelper._Lambda = new awsHelper._AWS.Lambda();
+      AwsHelper.init(context);
+      AwsHelper._Lambda = new AwsHelper._AWS.Lambda();
 
         // stub the lambda invoke function
-      simple.mock(awsHelper._Lambda, 'invoke').callFn(function (params, cb) {
+      simple.mock(AwsHelper._Lambda, 'invoke').callFn(function (params, cb) {
         var p = {
           FunctionName: '123456789:MyAmazingLambda',
           InvocationType: 'RequestResponse',
@@ -45,14 +45,14 @@ describe('AwsHelper.Lambda', function () {
         cb(null, 'totes worked');
       });
 
-      assert.equal(awsHelper.version, '$LATEST'); // confirm correctly instantiated
+      assert.equal(AwsHelper.version, '$LATEST'); // confirm correctly instantiated
 
       var params = {
         FunctionName: 'MyAmazingLambda',
         Payload: { 'hello': 'world' },
         Qualifier: ''
       };
-      awsHelper.Lambda.invoke(params, function (err, data) {
+      AwsHelper.Lambda.invoke(params, function (err, data) {
         assert(err === null);
         assert(data === 'totes worked');
         done();
@@ -64,11 +64,11 @@ describe('AwsHelper.Lambda', function () {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda'
       };
 
-      var awsHelper = AwsHelper(context);
-      awsHelper._Lambda = new awsHelper._AWS.Lambda();
+      AwsHelper.init(context);
+      AwsHelper._Lambda = new AwsHelper._AWS.Lambda();
 
         // stub the lambda invoke function
-      simple.mock(awsHelper._Lambda, 'invoke').callFn(function (params, cb) {
+      simple.mock(AwsHelper._Lambda, 'invoke').callFn(function (params, cb) {
         var p = {
           FunctionName: '123456789:MyAmazingLambda',
           InvocationType: 'RequestResponse',
@@ -80,14 +80,14 @@ describe('AwsHelper.Lambda', function () {
         cb(null, 'totes worked');
       });
 
-      assert.equal(awsHelper.version, '$LATEST'); // confirm correctly instantiated
+      assert.equal(AwsHelper.version, '$LATEST'); // confirm correctly instantiated
 
       var params = {
         FunctionName: '123456789:MyAmazingLambda',
         Payload: { 'hello': 'world' },
         Qualifier: ''
       };
-      awsHelper.Lambda.invoke(params, function (err, data) {
+      AwsHelper.Lambda.invoke(params, function (err, data) {
         assert(err === null);
         assert(data === 'totes worked');
         done();
@@ -98,9 +98,9 @@ describe('AwsHelper.Lambda', function () {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      var awsHelper = AwsHelper(context);
-      awsHelper._initLambdaObject();
-      assert(awsHelper._Lambda != null);
+      AwsHelper.init(context);
+      AwsHelper._initLambdaObject();
+      assert(AwsHelper._Lambda != null);
       done();
     });
   });

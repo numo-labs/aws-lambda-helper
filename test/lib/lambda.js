@@ -42,7 +42,7 @@ describe('AwsHelper.Lambda', function () {
           LogType: 'None'
         };
         assert.deepEqual(p, params);
-        cb(null, 'totes worked');
+        cb(null, {Payload: '{"totes": "worked"}'});
       });
 
       assert.equal(AwsHelper.version, '$LATEST'); // confirm correctly instantiated
@@ -54,7 +54,7 @@ describe('AwsHelper.Lambda', function () {
       };
       AwsHelper.Lambda.invoke(params, function (err, data) {
         assert(err === null);
-        assert(data === 'totes worked');
+        assert.deepEqual(data, { 'totes': 'worked' });
         done();
       });
     });
@@ -77,7 +77,7 @@ describe('AwsHelper.Lambda', function () {
           LogType: 'None'
         };
         assert.deepEqual(p, params);
-        cb(null, 'totes worked');
+        cb(null, {Payload: '{"totes": "worked"}'});
       });
 
       assert.equal(AwsHelper.version, '$LATEST'); // confirm correctly instantiated
@@ -89,7 +89,18 @@ describe('AwsHelper.Lambda', function () {
       };
       AwsHelper.Lambda.invoke(params, function (err, data) {
         assert(err === null);
-        assert(data === 'totes worked');
+        assert.deepEqual(data, { 'totes': 'worked' });
+        done();
+      });
+    });
+
+    it('should return error to the callback when the result contains an errorMessage', function (done) {
+      simple.mock(AwsHelper._Lambda, 'invoke').callbackWith(null, {Payload: '{"errorMessage": "some error"}'});
+      var p = {
+        FunctionName: 'a name'
+      };
+      AwsHelper.Lambda.invoke(p, function (err, data) {
+        assert.deepEqual(err, {'errorMessage': 'some error'});
         done();
       });
     });

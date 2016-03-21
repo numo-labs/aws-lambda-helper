@@ -48,7 +48,6 @@ describe('AwsHelper.SNS', function () {
           Message: params.Message,
           MessageStructure: 'json',
           Subject: '', // only used for eMail end-points
-          TargetArn: topic,
           TopicArn: topic
         };
 
@@ -81,7 +80,6 @@ describe('AwsHelper.SNS', function () {
           Message: params.Message,
           MessageStructure: 'json',
           Subject: '', // only used for eMail end-points
-          TargetArn: topic,
           TopicArn: topic
         };
 

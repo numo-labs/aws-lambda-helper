@@ -18,7 +18,7 @@ describe('AwsHelper.DynamoDB', function () {
         AwsHelper.init(context);
         AwsHelper.DynamoDB.putItem();
       } catch (e) {
-        console.log(e);  //TODO remove?
+        console.log(e);  // TODO remove?
         var expected_err_msg = 'params.TableName is required';
         assert(e.message.indexOf(expected_err_msg) > -1);
         done();

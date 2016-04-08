@@ -42,7 +42,7 @@ Collection of helper methods for lambda
         Qualifier: ''
       };
     AwsHelper.Lambda.invoke(params, function (err, data) {
-      if(err) return context.fail(err);
+      AwsHelper.failOnError(err, event, context);
       context.succeed(data);
     });
   }

@@ -20,13 +20,13 @@ describe('AwsHelper.failOnError', function (done) {
   });
 
   it('should call context fail function if error', function (done) {
-    var fakeContext = {
-      fail: function () {}
-    };
     var fakeError = 'There is an error';
-    var failMock = simple.mock(fakeContext, 'fail');
+    var fakeContext = {
+      fail: function (err) {
+        assert(err === fakeError);
+        done();
+      }
+    };
     AwsHelper.failOnError(fakeError, {}, fakeContext);
-    assert(failMock.lastCall.args[0] === fakeError);
-    done();
   });
 });

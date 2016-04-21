@@ -10,21 +10,6 @@ describe('AwsHelper.DynamoDB', function () {
       simple.restore();
     });
 
-    it('should throw an error if the params.TableName is not set', function (done) {
-      try {
-        var context = {
-          'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
-        };
-        AwsHelper.init(context);
-        AwsHelper.DynamoDB.putItem();
-      } catch (e) {
-        console.log(e);  // TODO remove?
-        var expected_err_msg = 'params.TableName is required';
-        assert(e.message.indexOf(expected_err_msg) > -1);
-        done();
-      }
-    });
-
     it('should create a DynamoDB object when not initiated', function (done) {
       var context = {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
@@ -93,4 +78,45 @@ describe('AwsHelper.DynamoDB', function () {
       });
     });
   });
+  describe('AwsHelper.DynamoDB.query', function () {
+    it('should append the environment to the table name', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:ci'
+      };
+      AwsHelper.init(context);
+      AwsHelper._DynamoDB = new AwsHelper._AWS.DynamoDB();
+      var mock = simple.mock(AwsHelper._DynamoDB, 'query');
+      AwsHelper.DynamoDB.query({TableName: 'name'});
+      assert.equal(mock.firstCall.arg.TableName, 'name-ci');
+      done();
+    });
+  });
+  describe('AwsHelper.DynamoDB.batchGetItem', function () {
+    it('should append the environment to the table name', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:ci'
+      };
+      AwsHelper.init(context);
+
+      var incoming_params = {
+        RequestItems: {
+          table1: { name: 'table1' },
+          table2: { name: 'table2' }
+        }
+      };
+
+      var expected_params = {
+        RequestItems: {
+          'table1-ci': { name: 'table1' },
+          'table2-ci': { name: 'table2' }
+        }
+      };
+
+      AwsHelper._DynamoDB = new AwsHelper._AWS.DynamoDB();
+      var mock = simple.mock(AwsHelper._DynamoDB, 'batchGetItem');
+      AwsHelper.DynamoDB.batchGetItem(incoming_params);
+      assert.deepEqual(mock.firstCall.arg, expected_params);
+      done();
+    });
+   });
 });

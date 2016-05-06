@@ -12,7 +12,7 @@ describe('AwsHelper.Logger', function () {
     };
     AwsHelper.init(context);
     var logger = AwsHelper.Logger();
-    assert.equal(logger.fields.module, '');
+    assert.equal(logger.fields.tags.length, 0);
     done();
   });
 
@@ -23,7 +23,7 @@ describe('AwsHelper.Logger', function () {
     };
     AwsHelper.init(context);
     var logger = AwsHelper.Logger('hello');
-    assert.equal(logger.fields.module, 'hello');
+    assert.equal(logger.fields.tags, 'hello');
     done();
   });
 
@@ -34,7 +34,7 @@ describe('AwsHelper.Logger', function () {
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
       AwsHelper.init(context);
-      var logger = AwsHelper.Logger();
+      var logger = AwsHelper.Logger(['stdout', 'test']);
       var stdout = '';
       var unhook = interceptStdout(function (text) {
         stdout += text;

@@ -114,5 +114,40 @@ describe('AwsHelper.Lambda', function () {
       assert(AwsHelper._Lambda != null);
       done();
     });
+
+    it('should invoke the Lambda function MyAmazingLambda (using mock) with forwarded traceable ids', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda'
+      };
+
+      AwsHelper.init(context, { headers: { 'trace-request-id': 'traceable-id' } });
+      AwsHelper._Lambda = new AwsHelper._AWS.Lambda();
+
+        // stub the lambda invoke function
+      simple.mock(AwsHelper._Lambda, 'invoke').callFn(function (params, cb) {
+        var p = {
+          FunctionName: '123456789:MyAmazingLambda',
+          InvocationType: 'RequestResponse',
+          Payload: JSON.stringify({ 'hello': 'world', 'headers': { 'trace-request-id': 'traceable-id' } }),
+          Qualifier: '$LATEST',
+          LogType: 'None'
+        };
+        assert.deepEqual(p, params);
+        cb(null, {Payload: '{"totes": "worked"}'});
+      });
+
+      assert.equal(AwsHelper.version, '$LATEST'); // confirm correctly instantiated
+
+      var params = {
+        FunctionName: 'MyAmazingLambda',
+        Payload: { 'hello': 'world' },
+        Qualifier: ''
+      };
+      AwsHelper.Lambda.invoke(params, function (err, data) {
+        assert(err === null);
+        assert.deepEqual(data, { 'totes': 'worked' });
+        done();
+      });
+    });
   });
 });

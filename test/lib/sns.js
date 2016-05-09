@@ -95,5 +95,42 @@ describe('AwsHelper.SNS', function () {
         done();
       });
     });
+
+    it('should (Mock) publish the message to the topic (using mock) with a traceable id', function (done) {
+      var context = {
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
+      };
+      AwsHelper.init(context, { headers: { 'trace-request-id': 'an id' } });
+      AwsHelper._SNS = new AwsHelper._AWS.SNS();
+
+      // stub the SNS.publish function
+      simple.mock(AwsHelper._SNS, 'publish').callFn(function (params, cb) {
+        var topic = 'arn:aws:sns:eu-west-1:123456789:my-awesome-topic-prod';
+        var p = {
+          Message: params.Message,
+          MessageStructure: 'json',
+          TopicArn: topic,
+          MessageAttributes: {
+            'trace-request-id': {
+              DataType: 'String',
+              StringValue: 'an id'
+            }
+          }
+        };
+
+        assert.deepEqual(p, params);
+        cb(null, {MessageId: 'mock-message-id'});
+      });
+
+      var params = {
+        Message: JSON.stringify({name: 'name'}),
+        TopicArn: 'arn:aws:sns:eu-west-1:123456789:my-awesome-topic-prod'
+      };
+      AwsHelper.SNS.publish(params, function (err, data) {
+        assert(err === null);
+        assert(data.MessageId === 'mock-message-id');
+        done();
+      });
+    });
   });
 });

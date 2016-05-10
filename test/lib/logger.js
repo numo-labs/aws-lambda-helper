@@ -33,7 +33,7 @@ describe('AwsHelper.Logger', function () {
         'functionName': 'aws-canary-lambda',
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
       };
-      AwsHelper.init(context);
+      AwsHelper.init(context, { headers: { 'trace-request-id': 'an id' } });
       var logger = AwsHelper.Logger(['stdout', 'test']);
       var stdout = '';
       var unhook = interceptStdout(function (text) {
@@ -44,6 +44,58 @@ describe('AwsHelper.Logger', function () {
         unhook();
         var json = JSON.parse(stdout);
         assert.equal(json.msg, 'hello in stdout');
+        done();
+      });
+    });
+
+    it('should log a json message with traceable_id', function (done) {
+      var context = {
+        'functionName': 'aws-canary-lambda',
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
+      };
+      AwsHelper.init(context, { headers: { 'trace-request-id': 'an id' } });
+      var logger = AwsHelper.Logger(['stdout', 'test']);
+      var stdout = '';
+      var unhook = interceptStdout(function (text) {
+        stdout += text;
+      });
+      logger.info('hello in stdout');
+      setImmediate(function () {
+        unhook();
+        var json = JSON.parse(stdout);
+        assert.equal(json.traceable_id, 'an id');
+        done();
+      });
+    });
+
+    it('should log a json message with traceable_id', function (done) {
+      var context = {
+        'functionName': 'aws-canary-lambda',
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
+      };
+      AwsHelper.init(context, {
+        Records: [
+          {
+            Sns: {
+              MessageAttributes: {
+                'trace-request-id': {
+                  Value: 'an id'
+                }
+              }
+            }
+          }
+        ]
+      });
+      var logger = AwsHelper.Logger(['stdout', 'test']);
+      var stdout = '';
+      var unhook = interceptStdout(function (text) {
+        stdout += text;
+      });
+      logger.info('hello in stdout');
+      setImmediate(function () {
+        unhook();
+        var json = JSON.parse(stdout);
+        assert.equal(json.traceable_id, 'an id');
         done();
       });
     });

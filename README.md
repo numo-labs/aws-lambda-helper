@@ -72,7 +72,7 @@ exports.handler = function(event, context){
   // assume : context.invokedFunctionArn = invokedFunctionArn: 'arn:aws:lambda:eu-west-1:123456789:function:mylambda:prod'
 
   //Initialise the helper by passing in the context
-  AwsHelper.init(context);
+  AwsHelper.init(context, event);
 
   var log = AwsHelper.Logger('example');
 

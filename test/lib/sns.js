@@ -107,7 +107,14 @@ describe('AwsHelper.SNS', function () {
       simple.mock(AwsHelper._SNS, 'publish').callFn(function (params, cb) {
         var topic = 'arn:aws:sns:eu-west-1:123456789:my-awesome-topic-prod';
         var p = {
-          Message: params.Message,
+          Message: JSON.stringify({
+            default: JSON.stringify({
+              name: 'name',
+              headers: {
+                'trace-request-id': 'an id'
+              }
+            })
+          }),
           MessageStructure: 'json',
           TopicArn: topic,
           MessageAttributes: {
@@ -117,13 +124,12 @@ describe('AwsHelper.SNS', function () {
             }
           }
         };
-
         assert.deepEqual(p, params);
         cb(null, {MessageId: 'mock-message-id'});
       });
 
       var params = {
-        Message: JSON.stringify({name: 'name'}),
+        Message: JSON.stringify({default: JSON.stringify({name: 'name'})}),
         TopicArn: 'arn:aws:sns:eu-west-1:123456789:my-awesome-topic-prod'
       };
       AwsHelper.SNS.publish(params, function (err, data) {

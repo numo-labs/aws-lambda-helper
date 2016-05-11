@@ -68,7 +68,7 @@ describe('AwsHelper.Logger', function () {
       });
     });
 
-    it('should log a json message with traceable_id', function (done) {
+    it('should log a json message with traceable_id from an SNS Message Attribute', function (done) {
       var context = {
         'functionName': 'aws-canary-lambda',
         'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
@@ -82,6 +82,41 @@ describe('AwsHelper.Logger', function () {
                   Value: 'an id'
                 }
               }
+            }
+          }
+        ]
+      });
+      var logger = AwsHelper.Logger(['stdout', 'test']);
+      var stdout = '';
+      var unhook = interceptStdout(function (text) {
+        stdout += text;
+      });
+      logger.info('hello in stdout');
+      setImmediate(function () {
+        unhook();
+        var json = JSON.parse(stdout);
+        assert.equal(json.traceable_id, 'an id');
+        done();
+      });
+    });
+
+    it('should log a json message with traceable_id from a SNS message', function (done) {
+      var context = {
+        'functionName': 'aws-canary-lambda',
+        'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
+      };
+      AwsHelper.init(context, {
+        Records: [
+          {
+            Sns: {
+              Message: JSON.stringify({
+                data: {
+                  some: 'data'
+                },
+                headers: {
+                  'trace-request-id': 'an id'
+                }
+              })
             }
           }
         ]

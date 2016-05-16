@@ -118,5 +118,5 @@ describe('AwsHelper.DynamoDB', function () {
       assert.deepEqual(mock.firstCall.arg, expected_params);
       done();
     });
-   });
+  });
 });

@@ -116,13 +116,7 @@ describe('AwsHelper.SNS', function () {
             })
           }),
           MessageStructure: 'json',
-          TopicArn: topic,
-          MessageAttributes: {
-            'trace-request-id': {
-              DataType: 'String',
-              StringValue: 'an id'
-            }
-          }
+          TopicArn: topic
         };
         assert.deepEqual(p, params);
         cb(null, {MessageId: 'mock-message-id'});

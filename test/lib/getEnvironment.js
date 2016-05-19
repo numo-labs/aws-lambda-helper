@@ -38,6 +38,4 @@ describe('getEnvironment', function () {
     assert.equal(AwsHelper.region, 'eu-west-1');
     done();
   });
-
-
 });

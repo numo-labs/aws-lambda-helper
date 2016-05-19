@@ -2,7 +2,6 @@ require('env2')('.env');
 var assert = require('assert');
 var Primus = require('primus');
 var Socket = Primus.createSocket({ transformer: 'engine.io', parser: 'JSON' });
- // , client = new Socket('http://localhost:8080');
 var client = new Socket(process.env.WEBSOCKET_SERVER_URL);
 var CLIENT_ID;
 client.on('data', function received (data) {

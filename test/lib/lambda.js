@@ -162,7 +162,7 @@ describe('AwsHelper.Lambda Real', function () {
     AwsHelper.init(context);
     var params = {FunctionName: 'DummyFunc'};
     AwsHelper.Lambda.invoke(params, function (err) {
-      assert.equal(err.statusCode, 400);
+      assert(err);
       done();
     });
   });

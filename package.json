@@ -18,6 +18,7 @@
   "devDependencies": {
     "aws-sdk": "^2.2.40",
     "engine.io": "^1.6.9",
+    "engine.io-client": "^1.6.9",
     "env2": "^2.0.8",
     "eslint": "^1.10.3",
     "eslint-config-semistandard": "^5.0.0",

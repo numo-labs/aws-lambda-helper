@@ -12,7 +12,7 @@ describe('pushToSocketServer', function () {
   it('Connect to WebSocket Server', function (done) {
     console.log('Attempting to connect to WebSocket Server ...', client.socket.transports);
     client.on('data', function received (data) {
-      console.log(typeof data, JSON.stringify(data, null, 2));
+      // console.log(typeof data, JSON.stringify(data, null, 2));
       if (data.connection) {
         console.log('Successfully Connected to Primus (WebSocket) Endpoint!');
         CLIENT_ID = data.connection;
@@ -29,8 +29,21 @@ describe('pushToSocketServer', function () {
     });
 
     AwsHelper.pushToSocketServer(CLIENT_ID, 12345, {'hello': 'world'}, function (err, res) {
-      console.log(err, res);
-      // assert.equal(res, 200);
+      // console.log(err, res);
+      assert.equal(res, 200);
+      assert(!err);
+      done();
+    });
+  });
+
+  it('Send Array of result items to client', function (done) {
+    var result = [
+      {hello: 'world', title: 'amazing holiday'},
+      {title: 'Sandy Beach with Fresh Coconuts'},
+      {title: 'Paradise Isle'}];
+    AwsHelper.pushToSocketServer(CLIENT_ID, 12345, result, function (err, res) {
+      // console.log(err, res);
+      assert.equal(res, 200);
       assert(!err);
       client.end();
       done();

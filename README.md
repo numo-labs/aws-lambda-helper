@@ -50,17 +50,17 @@ Collection of helper methods for lambda
 
 ### fn: failOnError
 
-This function will intercept the error if exists and then will call 'context.fail'. 
-The purpose of this function is to avoid the need of checking for errors so that in callback you could just focus on the succesfull procedure. 
+This function will intercept the error if exists and then will call 'context.fail'.
+The purpose of this function is to avoid the need of checking for errors so that in callback you could just focus on the succesfull procedure.
 
-It can be used as follows: 
+It can be used as follows:
 ```js
 
  AwsHelper.Lambda.invoke(params, function (err, data) {
       AwsHelper.failOnError(err, event, context);
       context.succeed(data);
   });
-  
+
 ```
 
 ### Logging JSON messages
@@ -99,3 +99,12 @@ exports.handler = function(event, context){
   // field name for the Error instance.
 }
 ```
+
+### Pushing Data Back to Client(s) Via WebSocket Server
+
+You will require an Environment Variable for the `WEBSOCKET_SERVER_URL`
+(*see below for complete list of required Environment Variables*)
+
+
+
+### Environment Variables

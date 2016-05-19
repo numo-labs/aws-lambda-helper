@@ -16,8 +16,6 @@ describe('pushToSocketServer', function () {
       if (data.connection) {
         console.log('Successfully Connected to Primus (WebSocket) Endpoint!');
         CLIENT_ID = data.connection;
-        // client.end();
-        // console.log(CLIENT_ID);
         assert(CLIENT_ID.length > 10);
         done();
       }
@@ -29,18 +27,8 @@ describe('pushToSocketServer', function () {
     client.on('data', function received (data) {
       assert(data.graphql.items[0].hello === 'world');
     });
-    // http request options:
-    var options = {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      'host': process.env.WEBSOCKET_SERVER_URL,
-      'path': '/data',
-      'method': 'POST',
-      body: {id: CLIENT_ID, items: [{'hello': 'world'}]}
-    };
 
-    AwsHelper.httpRequest(options, function (err, res) {
+    AwsHelper.pushToSocketServer(CLIENT_ID, 12345, {'hello': 'world'}, function (err, res) {
       console.log(err, res);
       // assert.equal(res, 200);
       assert(!err);

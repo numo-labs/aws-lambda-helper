@@ -12,7 +12,8 @@ describe('saveRecordToS3', function () {
       id: Math.floor(Math.random() * 10000000),
       name: 'My Amazing Hotel',
       sessionId: 'test1234',
-      userId: 'ClientFingerprint'
+      userId: 'ClientFingerprint',
+      items: [{id: 12345, title: 'my amazing hotel'}]
     };
     AwsHelper.saveRecordToS3(params, function (err, data) {
       assert(!err, 'No Errror Saving the Record');

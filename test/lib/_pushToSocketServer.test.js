@@ -63,13 +63,13 @@ describe('pushToSocketServer', function () {
 
   it('Send result to Client *AND* Save to S3', function (done) {
     var params = {
-      id: CLIENT_ID,
-      searchId: 12345,
+      id: CLIENT_ID, // the session id from WebSocket Server
+      searchId: 'ABC',
       userId: 'UniqueFingerprint',
       items: [
-        {hello: 'world', title: 'amazing holiday'},
-        {title: 'Sandy Beach with Fresh Coconuts'},
-        {title: 'Paradise Isle'}
+        {id: 123, hello: 'world', title: 'amazing holiday'},
+        {id: 456, title: 'Sandy Beach with Fresh Coconuts'},
+        {id: 789, title: 'Paradise Isle'}
       ]
     };
     AwsHelper.pushResultToClient(params, function (err, res) {

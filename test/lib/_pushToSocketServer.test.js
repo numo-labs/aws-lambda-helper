@@ -72,7 +72,7 @@ describe('pushToSocketServer', function () {
         {title: 'Paradise Isle'}
       ]
     };
-    AwsHelper.pushResult(params, function (err, res) {
+    AwsHelper.pushResultToClient(params, function (err, res) {
       console.log(err, res);
       // assert.equal(res, 200);
       assert(!err);

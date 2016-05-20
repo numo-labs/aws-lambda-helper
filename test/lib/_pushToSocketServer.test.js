@@ -32,8 +32,8 @@ describe('pushToSocketServer', function () {
       searchId: 12345,
       userId: 'UniqueFingerprint',
       items: [{'hello': 'world'}]
-    }
-    AwsHelper.pushToSocketServer(params , function (err, res) {
+    };
+    AwsHelper.pushToSocketServer(params, function (err, res) {
       // console.log(err, res);
       assert.equal(res, 200);
       assert(!err);
@@ -51,10 +51,30 @@ describe('pushToSocketServer', function () {
         {title: 'Sandy Beach with Fresh Coconuts'},
         {title: 'Paradise Isle'}
       ]
-    }
+    };
     AwsHelper.pushToSocketServer(params, function (err, res) {
       // console.log(err, res);
       assert.equal(res, 200);
+      assert(!err);
+      // client.end();
+      done();
+    });
+  });
+
+  it('Send result to Client *AND* Save to S3', function (done) {
+    var params = {
+      id: CLIENT_ID,
+      searchId: 12345,
+      userId: 'UniqueFingerprint',
+      items: [
+        {hello: 'world', title: 'amazing holiday'},
+        {title: 'Sandy Beach with Fresh Coconuts'},
+        {title: 'Paradise Isle'}
+      ]
+    };
+    AwsHelper.pushResult(params, function (err, res) {
+      console.log(err, res);
+      // assert.equal(res, 200);
       assert(!err);
       client.end();
       done();

@@ -27,8 +27,13 @@ describe('pushToSocketServer', function () {
     client.on('data', function received (data) {
       assert(data.graphql.items[0].hello === 'world');
     });
-
-    AwsHelper.pushToSocketServer(CLIENT_ID, 12345, {'hello': 'world'}, function (err, res) {
+    var params = {
+      id: CLIENT_ID,
+      searchId: 12345,
+      userId: 'UniqueFingerprint',
+      items: [{'hello': 'world'}]
+    }
+    AwsHelper.pushToSocketServer(params , function (err, res) {
       // console.log(err, res);
       assert.equal(res, 200);
       assert(!err);
@@ -37,11 +42,17 @@ describe('pushToSocketServer', function () {
   });
 
   it('Send Array of result items to client', function (done) {
-    var result = [
-      {hello: 'world', title: 'amazing holiday'},
-      {title: 'Sandy Beach with Fresh Coconuts'},
-      {title: 'Paradise Isle'}];
-    AwsHelper.pushToSocketServer(CLIENT_ID, 12345, result, function (err, res) {
+    var params = {
+      id: CLIENT_ID,
+      searchId: 12345,
+      userId: 'UniqueFingerprint',
+      items: [
+        {hello: 'world', title: 'amazing holiday'},
+        {title: 'Sandy Beach with Fresh Coconuts'},
+        {title: 'Paradise Isle'}
+      ]
+    }
+    AwsHelper.pushToSocketServer(params, function (err, res) {
       // console.log(err, res);
       assert.equal(res, 200);
       assert(!err);

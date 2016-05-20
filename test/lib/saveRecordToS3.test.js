@@ -8,21 +8,22 @@ describe('saveRecordToS3', function () {
     AwsHelper.init({
       invokedFunctionArn: 'arn:aws:lambda:eu-west-1:123456789:function:mylambda:ci'
     });
-    var json = {
+    var params = {
       id: Math.floor(Math.random() * 10000000),
-      name: 'My Amazing Hotel'
-    }
-    var sessionId = 'test1234';
-    AwsHelper.saveRecordToS3(sessionId, json, function (err, data) {
+      name: 'My Amazing Hotel',
+      sessionId: 'test1234',
+      userId: 'ClientFingerprint'
+    };
+    AwsHelper.saveRecordToS3(params, function (err, data) {
       assert(!err, 'No Errror Saving the Record');
       var url = data.Location.replace('https://', '');
-      var params = {
+      var httpParams = {
         host: url.split('/')[0],
         path: url.split('.com')[1]
-      }
-      AwsHelper.httpRequest(params, function (err, data) {
-        // console.log(err, data);
-        assert.equal(data.id, json.id, 'record Successfully saved to S3');
+      };
+      AwsHelper.httpRequest(httpParams, function (err, data) {
+        assert(!err, 'No Errror retrieving the Record');
+        assert.equal(data.id, params.id, 'record Successfully saved to S3');
         done();
       });
     });

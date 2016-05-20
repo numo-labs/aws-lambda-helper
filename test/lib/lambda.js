@@ -151,3 +151,19 @@ describe('AwsHelper.Lambda', function () {
     });
   });
 });
+
+// test error branch in AwsHelper.Lambda.invoke
+describe('AwsHelper.Lambda Real', function () {
+  it('Invoke with invalid params.FunctionName', function (done) {
+    // Create a awsHelper with a good context
+    var context = {
+      'invokedFunctionArn': 'arn:aws:lambda:eu-west-1:123456789:function:aws-canary-lambda:prod'
+    };
+    AwsHelper.init(context);
+    var params = {FunctionName: 'DummyFunc'};
+    AwsHelper.Lambda.invoke(params, function (err) {
+      assert(err);
+      done();
+    });
+  });
+});

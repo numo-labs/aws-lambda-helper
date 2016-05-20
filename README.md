@@ -3,6 +3,8 @@ Collection of helper methods for lambda
 
 [![Build Status](https://travis-ci.org/numo-labs/aws-lambda-helper.svg?branch=master)](https://travis-ci.org/numo-labs/aws-lambda-helper)
 [![codecov.io](https://codecov.io/github/numo-labs/aws-lambda-helper/coverage.svg?branch=master)](https://codecov.io/github/numo-labs/aws-lambda-helper?branch=master)
+[![Dependency Status](https://david-dm.org/numo-labs/aws-lambda-helper.svg)](https://david-dm.org/numo-labs/aws-lambda-helper)
+[![devDependency Status](https://david-dm.org/numo-labs/aws-lambda-helper/dev-status.svg)](https://david-dm.org/numo-labs/aws-lambda-helper#info=devDependencies)
 
 ## Installation
 `$ npm install aws-lambda-helper --save`
@@ -50,17 +52,17 @@ Collection of helper methods for lambda
 
 ### fn: failOnError
 
-This function will intercept the error if exists and then will call 'context.fail'. 
-The purpose of this function is to avoid the need of checking for errors so that in callback you could just focus on the succesfull procedure. 
+This function will intercept the error if exists and then will call 'context.fail'.
+The purpose of this function is to avoid the need of checking for errors so that in callback you could just focus on the succesfull procedure.
 
-It can be used as follows: 
+It can be used as follows:
 ```js
 
  AwsHelper.Lambda.invoke(params, function (err, data) {
       AwsHelper.failOnError(err, event, context);
       context.succeed(data);
   });
-  
+
 ```
 
 ### Logging JSON messages
@@ -99,3 +101,28 @@ exports.handler = function(event, context){
   // field name for the Error instance.
 }
 ```
+
+### Pushing Data Back to Client(s) Via WebSocket Server
+
+```js
+var params = {
+  id: sessionId, // the id provided by the WebSocket Server
+  searchId: 12345, // the id of this particular search request
+  userId: 'UniqueFingerprint', // the super long string that uniquely identifies a client
+  items: [
+    // your list of one or more tiles or packages go here
+  ]
+};
+AwsHelper.pushResultToClient(params, function (err, res) {
+  console.log(err, res); // do what ever you want after the result is pushed
+});
+```
+
+#### Environment Variables
+
+You will require an Environment Variable for the `WEBSOCKET_SERVER_URL`
+and `AWS_S3_SEARCH_RESULT_BUCKET`
+(*see below for complete list of required Environment Variables*)
+
+> if you get stuck get the Environment Variables from CodeShip:
+> https://codeship.com/projects/143221/configure_environment

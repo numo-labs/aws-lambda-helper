@@ -1,6 +1,6 @@
 {
   "name": "aws-lambda-helper",
-  "version": "2.12.0",
+  "version": "2.13.0",
   "description": "Collection of helper methods for lambda",
   "main": "lib/index.js",
   "scripts": {
@@ -16,17 +16,17 @@
   "license": "GPL-2.0",
   "homepage": "https://github.com/tcdl/aws-lambda-helper",
   "devDependencies": {
-    "aws-sdk": "^2.2.40",
+    "aws-sdk": "^2.3.14",
     "engine.io": "^1.6.9",
     "engine.io-client": "^1.6.9",
-    "env2": "^2.0.8",
-    "eslint": "^1.10.3",
-    "eslint-config-semistandard": "^5.0.0",
+    "env2": "^2.1.0",
+    "eslint": "^2.10.2",
+    "eslint-config-semistandard": "^6.0.2",
     "intercept-stdout": "^0.1.2",
-    "istanbul": "^0.4.2",
+    "istanbul": "^0.4.3",
     "mocha": "^2.4.5",
     "primus": "^5.2.1",
-    "simple-mock": "^0.6.0"
+    "simple-mock": "^0.7.0"
   },
   "dependencies": {
     "bunyan": "^1.8.1"

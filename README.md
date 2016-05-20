@@ -3,6 +3,8 @@ Collection of helper methods for lambda
 
 [![Build Status](https://travis-ci.org/numo-labs/aws-lambda-helper.svg?branch=master)](https://travis-ci.org/numo-labs/aws-lambda-helper)
 [![codecov.io](https://codecov.io/github/numo-labs/aws-lambda-helper/coverage.svg?branch=master)](https://codecov.io/github/numo-labs/aws-lambda-helper?branch=master)
+[![Dependency Status](https://david-dm.org/numo-labs/aws-lambda-helper.svg)](https://david-dm.org/numo-labs/aws-lambda-helper)
+[![devDependency Status](https://david-dm.org/numo-labs/aws-lambda-helper/dev-status.svg)](https://david-dm.org/numo-labs/aws-lambda-helper#info=devDependencies)
 
 ## Installation
 `$ npm install aws-lambda-helper --save`

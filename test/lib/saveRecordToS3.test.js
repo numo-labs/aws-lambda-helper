@@ -12,7 +12,8 @@ describe('saveRecordToS3', function () {
       id: Math.floor(Math.random() * 10000000),
       name: 'My Amazing Hotel',
       sessionId: 'test1234',
-      userId: 'ClientFingerprint'
+      userId: 'ClientFingerprint',
+      items: [{id: 12345, title: 'my amazing hotel'}]
     };
     AwsHelper.saveRecordToS3(params, function (err, data) {
       assert(!err, 'No Errror Saving the Record');
@@ -23,7 +24,7 @@ describe('saveRecordToS3', function () {
       };
       AwsHelper.httpRequest(httpParams, function (err, data) {
         assert(!err, 'No Errror retrieving the Record');
-        assert.equal(data.id, params.id, 'record Successfully saved to S3');
+        assert.equal(data.id, params.items[0].id, 'record Successfully saved to S3');
         done();
       });
     });

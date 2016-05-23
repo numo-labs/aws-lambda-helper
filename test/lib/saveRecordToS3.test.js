@@ -24,7 +24,7 @@ describe('saveRecordToS3', function () {
       };
       AwsHelper.httpRequest(httpParams, function (err, data) {
         assert(!err, 'No Errror retrieving the Record');
-        assert.equal(data.id, params.id, 'record Successfully saved to S3');
+        assert.equal(data.id, params.items[0].id, 'record Successfully saved to S3');
         done();
       });
     });

@@ -32,6 +32,18 @@ describe('httpRequest', function () {
     });
   });
 
+  it('make GET request to Valid NON-JSON url (error branch check)', function (done) {
+    var options = {
+      'host': 'github.com',
+      'port': 443,
+      'path': '/numo-labs'
+    };
+    AwsHelper.httpRequest(options, function (e) {
+      assert(e.toString().indexOf('Unexpected token <') > -1, 'ENOTFOUND');
+      done();
+    });
+  });
+
   it('make GET request to invalid url (error branch check)', function (done) {
     var options = {
       'host': 'example.not',

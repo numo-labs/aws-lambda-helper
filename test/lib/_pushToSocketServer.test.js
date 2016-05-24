@@ -7,14 +7,21 @@ var Primus = require('primus');
 var Socket = Primus.createSocket({ transformer: 'engine.io', parser: 'JSON' });
 var client = new Socket('http://' + process.env.WEBSOCKET_SERVER_URL);
 var CLIENT_ID;
+var ONCE = false;
 
 describe('pushToSocketServer', function () {
-  it('Connect to WebSocket Server', function (done) {
+  before('Connect to WebSocket Server', function (done) {
+    AwsHelper.init({
+      invokedFunctionArn: 'arn:aws:lambda:eu-west-1:123456789:function:mylambda:ci'
+    });
+
     console.log('Attempting to connect to WebSocket Server ...', client.socket.transports);
+
     client.on('data', function received (data) {
-      // console.log(typeof data, JSON.stringify(data, null, 2));
-      if (data.connection) {
+      console.log('data received:', typeof data, JSON.stringify(data, null, 2));
+      if (data.connection && !ONCE) {
         console.log('Successfully Connected to Primus (WebSocket) Endpoint!');
+        ONCE = true;
         CLIENT_ID = data.connection;
         assert(CLIENT_ID.length > 10);
         done();
@@ -34,7 +41,7 @@ describe('pushToSocketServer', function () {
       items: [{'hello': 'world'}]
     };
     AwsHelper.pushToSocketServer(params, function (err, res) {
-      // console.log(err, res);
+      console.log(' > > > ', err, res);
       assert.equal(res, 200);
       assert(!err);
       done();
@@ -77,6 +84,22 @@ describe('pushToSocketServer', function () {
       // assert.equal(res, 200);
       assert(!err);
       client.end();
+      done();
+    });
+  });
+
+  it('Attempt to pushResultToClient with invalid id', function (done) {
+    var params = {
+      // id: 'invalid', // the session id from WebSocket Server
+      searchId: 'TEST',
+      userId: 'UniqueFingerprint',
+      items: [
+        {id: 123, hello: 'world', title: 'amazing holiday'}
+      ]
+    };
+    AwsHelper.pushResultToClient(params, function (err, res) {
+      // console.log(' -->', err, res);
+      assert.equal(err, 400, 'Got 400 Error (as expected)');
       done();
     });
   });

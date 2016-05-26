@@ -141,6 +141,7 @@ and retrieve them later:
 ```
 export WEBSOCKET_SERVER_URL=get_this_from_codeship
 export AWS_S3_SEARCH_RESULT_BUCKET=get_this_from_codeship
+export SEARCH_RESULT_TOPIC=arn:aws:sns:eu-west-1:123456789:my-awesome-topic
 ```
 
 (*see below for complete list of required Environment Variables*)

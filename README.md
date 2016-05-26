@@ -118,10 +118,32 @@ AwsHelper.pushResultToClient(params, function (err, res) {
 });
 ```
 
+### Retrieving a Search Result (*Artile Tile or Package*)
+
+When a user shares a result tile (*e.g. an article or package*)
+we retrieve the result they saw from S3:
+
+```js
+var params = {
+  userId: 'UniqueFingerprint', // the super long string that uniquely identifies a client
+  sessionId: 12345, // the session as defined by the WebSocket id
+  itemId: ABC1234, // the tile (article/pacakge) id
+};
+AwsHelper.getRecordFromS3(params, function (err, json) {
+  console.log(err, json); // handle error or use json
+});
+```
+
 #### Environment Variables
 
-You will require an Environment Variable for the `WEBSOCKET_SERVER_URL`
-and `AWS_S3_SEARCH_RESULT_BUCKET`
+You will require an the following Environment Variables to push results to S3
+and retrieve them later:
+```
+export WEBSOCKET_SERVER_URL=get_this_from_codeship
+export AWS_S3_SEARCH_RESULT_BUCKET=get_this_from_codeship
+export SEARCH_RESULT_TOPIC=arn:aws:sns:eu-west-1:123456789:my-awesome-topic
+```
+
 (*see below for complete list of required Environment Variables*)
 
 > if you get stuck get the Environment Variables from CodeShip:

@@ -4,21 +4,21 @@ var assert = require('assert');
 var AwsHelper = require('./../../lib/index');
 
 var Primus = require('primus');
-var Socket = Primus.createSocket({ transformer: 'engine.io', parser: 'JSON' });
-var client = new Socket('http://' + process.env.WEBSOCKET_SERVER_URL);
 var CLIENT_ID;
 var ONCE = false;
+var client;
 
 describe('pushToSocketServer', function () {
   before('Connect to WebSocket Server', function (done) {
+    var Socket = Primus.createSocket({ transformer: 'engine.io', parser: 'JSON' });
+    client = new Socket('http://' + process.env.WEBSOCKET_SERVER_URL);
+
     AwsHelper.init({
       invokedFunctionArn: 'arn:aws:lambda:eu-west-1:123456789:function:mylambda:ci'
     });
 
-    console.log('Attempting to connect to WebSocket Server ...', client.socket.transports);
-
     client.on('data', function received (data) {
-      console.log('data received:', typeof data, JSON.stringify(data, null, 2));
+      console.log('data received (via websocket):', JSON.stringify(data, null, 2));
       if (data.connection && !ONCE) {
         console.log('Successfully Connected to Primus (WebSocket) Endpoint!');
         ONCE = true;
@@ -37,11 +37,10 @@ describe('pushToSocketServer', function () {
     var params = {
       id: CLIENT_ID,
       searchId: 12345,
-      userId: 'UniqueFingerprint',
+      userId: 'TESTUSERID',
       items: [{'hello': 'world'}]
     };
     AwsHelper.pushToSocketServer(params, function (err, res) {
-      console.log(' > > > ', err, res);
       assert.equal(res, 200);
       assert(!err);
       done();
@@ -52,7 +51,7 @@ describe('pushToSocketServer', function () {
     var params = {
       id: CLIENT_ID,
       searchId: 12345,
-      userId: 'UniqueFingerprint',
+      userId: 'TESTUSERID',
       items: [
         {hello: 'world', title: 'amazing holiday'},
         {title: 'Sandy Beach with Fresh Coconuts'},
@@ -72,7 +71,7 @@ describe('pushToSocketServer', function () {
     var params = {
       id: CLIENT_ID, // the session id from WebSocket Server
       searchId: 'ABC',
-      userId: 'UniqueFingerprint',
+      userId: 'TESTUSERID',
       items: [
         {id: 123, hello: 'world', title: 'amazing holiday'},
         {id: 456, title: 'Sandy Beach with Fresh Coconuts'},
@@ -81,9 +80,27 @@ describe('pushToSocketServer', function () {
     };
     AwsHelper.pushResultToClient(params, function (err, res) {
       console.log(err, res);
-      // assert.equal(res, 200);
       assert(!err);
-      client.end();
+      // assert.equal(res, 200);
+      done();
+    });
+  });
+
+  it('Send result to Client *AND* Save to S3 (no SNS Topic)', function (done) {
+    var params = {
+      id: CLIENT_ID, // the session id from WebSocket Server
+      searchId: 'ABC',
+      userId: 'TESTUSERID',
+      items: [
+        {id: 123, hello: 'world', title: 'amazing holiday'},
+        {id: 456, title: 'Sandy Beach with Fresh Coconuts'},
+        {id: 789, title: 'Paradise Isle'}
+      ]
+    };
+    AwsHelper.pushResultToClient(params, function (err, res) {
+      console.log(err, res);
+      assert(!err);
+      // assert.equal(res, 200);
       done();
     });
   });
@@ -92,7 +109,7 @@ describe('pushToSocketServer', function () {
     var params = {
       // id: 'invalid', // the session id from WebSocket Server
       searchId: 'TEST',
-      userId: 'UniqueFingerprint',
+      userId: 'TESTUSERID',
       items: [
         {id: 123, hello: 'world', title: 'amazing holiday'}
       ]
@@ -102,5 +119,10 @@ describe('pushToSocketServer', function () {
       assert.equal(err, 400, 'Got 400 Error (as expected)');
       done();
     });
+  });
+
+  after('Shut down the Primus connection', function (done) {
+    client.end();
+    done();
   });
 });

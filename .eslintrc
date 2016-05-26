@@ -3,8 +3,9 @@
   "globals": {
     "describe": false,
     "it": false,
+    "after": false,
     "afterEach": false,
     "beforeEach": false,
-    "before": false
+    "before": false,
   }
 }

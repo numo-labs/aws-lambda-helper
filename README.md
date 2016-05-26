@@ -129,8 +129,8 @@ var params = {
   sessionId: 12345, // the session as defined by the WebSocket id
   itemId: ABC1234, // the tile (article/pacakge) id
 };
-AwsHelper.getRecordFromS3(params, function (err, res) {
-  console.log(err, res); // do what ever you want after the result is pushed
+AwsHelper.getRecordFromS3(params, function (err, json) {
+  console.log(err, json); // handle error or use json
 });
 ```
 

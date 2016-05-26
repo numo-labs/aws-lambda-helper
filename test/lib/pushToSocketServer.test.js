@@ -86,6 +86,25 @@ describe('pushToSocketServer', function () {
     });
   });
 
+  it('Send result to Client *AND* Save to S3 (no SNS Topic)', function (done) {
+    var params = {
+      id: CLIENT_ID, // the session id from WebSocket Server
+      searchId: 'ABC',
+      userId: 'TESTUSERID',
+      items: [
+        {id: 123, hello: 'world', title: 'amazing holiday'},
+        {id: 456, title: 'Sandy Beach with Fresh Coconuts'},
+        {id: 789, title: 'Paradise Isle'}
+      ]
+    };
+    AwsHelper.pushResultToClient(params, function (err, res) {
+      console.log(err, res);
+      assert(!err);
+      // assert.equal(res, 200);
+      done();
+    });
+  });
+
   it('Attempt to pushResultToClient with invalid id', function (done) {
     var params = {
       // id: 'invalid', // the session id from WebSocket Server

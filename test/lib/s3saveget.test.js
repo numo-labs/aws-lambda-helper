@@ -18,7 +18,7 @@ var PARAMS = {
 describe('saveRecordToS3', function () {
   it('saves a search result tile/package to S3', function (done) {
     AwsHelper.init({
-      invokedFunctionArn: 'arn:aws:lambda:eu-west-1:123456789:function:mylambda:ci'
+      invokedFunctionArn: process.env.INVOKED_FUNCTION_ARN
     });
     AwsHelper.saveRecordToS3(PARAMS, function (err, data) {
       assert(!err, 'No Errror Saving the Record');

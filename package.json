@@ -26,7 +26,8 @@
     "istanbul": "^0.4.3",
     "mocha": "^2.4.5",
     "primus": "^5.2.1",
-    "simple-mock": "^0.7.0"
+    "simple-mock": "^0.7.0",
+    "wreck": "^7.2.1"
   },
   "dependencies": {
     "bunyan": "^1.8.1"

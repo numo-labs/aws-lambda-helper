@@ -6,7 +6,7 @@ var AwsHelper = require('./../../lib/index');
 describe('pushToSocketServer', function () {
   before('Connect to WebSocket Server', function (done) {
     AwsHelper.init({
-      invokedFunctionArn: 'arn:aws:lambda:eu-west-1:847002989232:function:lambda-ne-classic-package-provider-v1'
+      invokedFunctionArn: process.env.INVOKED_FUNCTION_ARN
     });
     done();
   });

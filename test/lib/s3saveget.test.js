@@ -10,8 +10,8 @@ var PARAMS = {
   connectionId: 'test1234',
   userId: 'TESTUSERID',
   items: [
-    {id: 12345, title: 'my amazing hotel', url: 'test/test/12345'},
-    {id: 45678, title: 'my lovely resort', url: 'test/test/45678'}
+    {id: 0, title: 'my amazing hotel', url: 'test/test/12345'},
+    {id: 1, title: 'my lovely resort', url: 'test/test/45678'}
   ]
 };
 
@@ -27,7 +27,7 @@ describe('saveRecordToS3', function () {
         // console.log(err,  payload.toString());
         var json = JSON.parse(payload.toString());
         assert(!err, 'No Errror retrieving the Record');
-        assert.equal(json.id, PARAMS.items[1].id, 'record Successfully saved to S3');
+        assert(json.id === PARAMS.items[json.id].id, 'record Successfully saved to S3');
         done();
       });
     });

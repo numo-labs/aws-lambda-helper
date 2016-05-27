@@ -50,21 +50,6 @@ Collection of helper methods for lambda
   }
 ```
 
-### fn: failOnError
-
-This function will intercept the error if exists and then will call 'context.fail'.
-The purpose of this function is to avoid the need of checking for errors so that in callback you could just focus on the successful procedure.
-
-It can be used as follows:
-```js
-
- AwsHelper.Lambda.invoke(params, function (err, data) {
-      AwsHelper.failOnError(err, event, context);
-      context.succeed(data);
-  });
-
-```
-
 ### Logging JSON messages
 
 ```js

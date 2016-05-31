@@ -5,13 +5,11 @@ const simple = require('simple-mock');
 const AwsHelper = require('./../../lib/index');
 
 describe('pushToSNSTopic', function () {
-
   after('restore the SEARCH_RESULT_TOPIC environment variable', () => {
     process.env.SEARCH_RESULT_TOPIC = SEARCH_RESULT_TOPIC;
   });
 
   describe('with envvar set', () => {
-
     before(() => {
       process.env.SEARCH_RESULT_TOPIC = 'search-results-v1';
     });
@@ -27,16 +25,20 @@ describe('pushToSNSTopic', function () {
     it('calls through to SNS.publish', (done) => {
       var params = { hello: 'world' };
       AwsHelper.pushToSNSTopic(params, function (err, data) {
+        assert(!err, 'no errors pushing to SNS Topic');
         assert(AwsHelper.SNS.publish.called);
         const body = AwsHelper.SNS.publish.lastCall.args[0];
-        assert.equal(body.Message, JSON.stringify({ default: JSON.stringify(params) }));
+        assert.equal(body.Message,
+          JSON.stringify({ default: JSON.stringify(params) }));
         done();
       });
     });
 
-    it('sets the Message property of the publish parameters to a JSON string of an object with "default" property', (done) => {
+    it('sets the Message property of the publish parameters to a JSON string' +
+      'of an object with "default" property', (done) => {
       var params = { hello: 'world' };
       AwsHelper.pushToSNSTopic(params, function (err, data) {
+        assert(!err, 'no errors pushing to SNS Topic');
         const body = AwsHelper.SNS.publish.lastCall.args[0];
         assert.equal(typeof body.Message, 'string');
         assert(JSON.parse(body.Message).default);
@@ -44,28 +46,29 @@ describe('pushToSNSTopic', function () {
       });
     });
 
-    it('sets the default property of the message to a JSON string of the params', (done) => {
+    it('sets the default property of the message to a JSON string', (done) => {
       var params = { hello: 'world' };
       AwsHelper.pushToSNSTopic(params, function (err, data) {
-        const body = JSON.parse(AwsHelper.SNS.publish.lastCall.args[0].Message).default;
+        assert(!err, 'no errors pushing to SNS Topic');
+        var msg = AwsHelper.SNS.publish.lastCall.args[0].Message;
+        const body = JSON.parse(msg).default;
         assert.deepEqual(JSON.parse(body), params);
         done();
       });
     });
 
-    it('sets the topic property of the message to the SEARCH_RESULT_TOPIC', (done) => {
+    it('sets topic property of the message to SEARCH_RESULT_TOPIC', (done) => {
       var params = { hello: 'world' };
       AwsHelper.pushToSNSTopic(params, function (err, data) {
+        assert(!err, 'no errors pushing to SNS Topic');
         const body = AwsHelper.SNS.publish.lastCall.args[0];
         assert.equal(body.TopicArn, 'search-results-v1');
         done();
       });
     });
-
   });
 
   describe('without envvar set', () => {
-
     before(() => {
       delete process.env.SEARCH_RESULT_TOPIC;
     });
@@ -79,6 +82,5 @@ describe('pushToSNSTopic', function () {
         done();
       });
     });
-
   });
 });

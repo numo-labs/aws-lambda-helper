@@ -50,21 +50,6 @@ Collection of helper methods for lambda
   }
 ```
 
-### fn: failOnError
-
-This function will intercept the error if exists and then will call 'context.fail'.
-The purpose of this function is to avoid the need of checking for errors so that in callback you could just focus on the succesfull procedure.
-
-It can be used as follows:
-```js
-
- AwsHelper.Lambda.invoke(params, function (err, data) {
-      AwsHelper.failOnError(err, event, context);
-      context.succeed(data);
-  });
-
-```
-
 ### Logging JSON messages
 
 ```js
@@ -106,12 +91,12 @@ exports.handler = function(event, context){
 
 ```js
 var params = {
-  id: sessionId, // the id provided by the WebSocket Server
-  searchId: 12345, // the id of this particular search request
+  id: sessionId, // the id provided by the WebSocket Server AKA "connectionId"
+  bucketId: 12345, // the id of this rticular search request
   userId: 'UniqueFingerprint', // the super long string that uniquely identifies a client
-  items: [
-    // your list of one or more tiles or packages go here
-  ]
+  items: [{  // your list of one or more tiles or packages go here
+    url: '/userId/connectionId/bucketId/itemId', // url for S3 object.
+  }] // note: url should not have .json in it.
 };
 AwsHelper.pushResultToClient(params, function (err, res) {
   console.log(err, res); // do what ever you want after the result is pushed
@@ -125,9 +110,7 @@ we retrieve the result they saw from S3:
 
 ```js
 var params = {
-  userId: 'UniqueFingerprint', // the super long string that uniquely identifies a client
-  sessionId: 12345, // the session as defined by the WebSocket id
-  itemId: ABC1234, // the tile (article/pacakge) id
+  url: '/userId/connectionId/bucketId/itemId', // supplied by front-end
 };
 AwsHelper.getRecordFromS3(params, function (err, json) {
   console.log(err, json); // handle error or use json

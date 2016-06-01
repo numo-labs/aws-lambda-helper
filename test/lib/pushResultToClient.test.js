@@ -3,7 +3,7 @@ require('env2')('.env');
 var assert = require('assert');
 var AwsHelper = require('./../../lib/index');
 
-describe('pushToSocketServer', function () {
+describe('pushResultToClient', function () {
   before('Connect to WebSocket Server', function (done) {
     AwsHelper.init({
       invokedFunctionArn: process.env.INVOKED_FUNCTION_ARN
@@ -47,6 +47,21 @@ describe('pushToSocketServer', function () {
         'Error thrown (as expected)');
       // restore the environment variable for other tests:
       process.env.SEARCH_RESULT_TOPIC = 'search-results-v1';
+      done();
+    });
+  });
+
+  it('calls back with error if no id property is present on the params', (done) => {
+    var params = {
+      searchId: 'ABC',
+      userId: 'TESTUSERID',
+      items: [{
+        id: 123, hello: 'world', title: 'amazing holiday',
+        url: 'userId/connectionId/bucketId/123'
+      }]
+    };
+    AwsHelper.pushResultToClient(params, function (err, res) {
+      assert(err);
       done();
     });
   });

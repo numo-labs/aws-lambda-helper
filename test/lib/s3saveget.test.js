@@ -10,8 +10,8 @@ var PARAMS = {
   connectionId: 'test1234',
   userId: 'TESTUSERID',
   items: [
-    {id: 0, title: 'my amazing hotel', url: 'test/test/12345'},
-    {id: 1, title: 'my lovely resort', url: 'test/test/45678'}
+    {type: 'package', id: 0, title: 'my amazing hotel', url: 'test/test/12345'},
+    {type: 'tile', id: 1, title: 'my lovely resort', url: 'test/test/45678'}
   ]
 };
 

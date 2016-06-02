@@ -27,11 +27,11 @@ describe('pushResultToClient', function () {
       userId: 'TESTUSERID',
       items: [
         {
-          id: 123, hello: 'world', title: 'amazing holiday',
+          type: 'package', id: 123, hello: 'world', title: 'amazing holiday',
           url: 'userId/connectionId/bucketId/123'
         },
         {
-          id: 456, hello: 'world', title: 'not amazing holiday',
+          type: 'package', id: 456, hello: 'world', title: 'not amazing holiday',
           url: 'userId/connectionId/bucketId/456'
         }
       ]
@@ -54,11 +54,11 @@ describe('pushResultToClient', function () {
       userId: 'TESTUSERID',
       items: [
         {
-          id: 123, hello: 'world', title: 'amazing holiday',
+          type: 'package', id: 123, hello: 'world', title: 'amazing holiday',
           url: 'userId/connectionId/bucketId/123'
         },
         {
-          id: 456, hello: 'world', title: 'not amazing holiday',
+          type: 'package', id: 456, hello: 'world', title: 'not amazing holiday',
           url: 'userId/connectionId/bucketId/456'
         }
       ]
@@ -72,25 +72,30 @@ describe('pushResultToClient', function () {
     });
   });
 
-  it('does not save items without a url to S3', function (done) {
+  it('does not save items with types other than "packge" or "tile" to S3', function (done) {
     var params = {
       id: 'dummyConnectionId', // the session id from WebSocket Server
       searchId: 'ABC',
       userId: 'TESTUSERID',
       items: [
         {
-          id: 123, hello: 'world', title: 'amazing holiday',
+          type: 'package', id: 123, hello: 'world', title: 'amazing holiday',
           url: 'userId/connectionId/bucketId/123'
         },
         {
-          id: 456, hello: 'world', title: 'not amazing holiday'
+          type: 'tile', id: 456, hello: 'world', title: 'amazing holiday',
+          url: 'userId/connectionId/bucketId/123'
+        },
+        {
+          type: 'filter', id: 789, hello: 'world', title: 'not amazing holiday'
         }
       ]
     };
     AwsHelper.pushResultToClient(params, function (err, res) {
       assert(!err);
-      assert.equal(AWS.S3.prototype.upload.callCount, 1);
-      assert.equal(AWS.S3.prototype.upload.lastCall.args[0].Body, JSON.stringify(params.items[0]));
+      assert.equal(AWS.S3.prototype.upload.callCount, 2);
+      assert.equal(AWS.S3.prototype.upload.calls[0].args[0].Body, JSON.stringify(params.items[0]));
+      assert.equal(AWS.S3.prototype.upload.calls[1].args[0].Body, JSON.stringify(params.items[1]));
       done();
     });
   });

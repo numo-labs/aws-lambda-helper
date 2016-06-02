@@ -47,4 +47,14 @@ describe('getRecordFromS3', function () {
       done();
     });
   });
+
+  // don't throw error. https://github.com/numo-labs/aws-lambda-helper/issues/59
+  it('s3 getRecord returns error in callback if not found', (done) => {
+    var params = {url: 'non-existent'};
+    AwsHelper.getRecordFromS3(params, function (err, res) {
+      console.log(err, res);
+      assert(err);
+      done();
+    });
+  });
 });

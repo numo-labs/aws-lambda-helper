@@ -112,7 +112,7 @@ describe('pushResultToClient', function () {
       ]
     };
     AwsHelper.pushResultToClient(params, function (err, res) {
-      assert(!err);
+      assert(err);
       assert.equal(AWS.S3.prototype.upload.callCount, 0);
       done();
     });

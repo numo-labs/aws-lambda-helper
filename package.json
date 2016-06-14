@@ -30,6 +30,7 @@
     "wreck": "^7.2.1"
   },
   "dependencies": {
+    "async": "2.0.0-rc.6",
     "bunyan": "^1.8.1"
   }
 }

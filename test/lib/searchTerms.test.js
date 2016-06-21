@@ -3,7 +3,7 @@ const index = require('../../lib/index');
 const searchTerms = require('../../lib/searchTerms');
 
 describe('searchTerms', () => {
-  describe.only('toKeyString', () => {
+  describe('toKeyString', () => {
     it('should transform searchTerms into a long string', done => {
       const terms = {
         geography: ['geo:b', 'geo:a'],

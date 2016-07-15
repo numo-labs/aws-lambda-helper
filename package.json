@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "async": "2.0.0-rc.6",
-    "bunyan": "^1.8.1"
+    "bunyan": "^1.8.1",
+    "lltrace-aws-sdk": "^1.0.0"
   }
 }

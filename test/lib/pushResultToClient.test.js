@@ -8,7 +8,8 @@ const AwsHelper = require('./../../lib/index');
 describe('pushResultToClient', function () {
   before('Connect to WebSocket Server', function (done) {
     AwsHelper.init({
-      invokedFunctionArn: process.env.INVOKED_FUNCTION_ARN
+      invokedFunctionArn: process.env.INVOKED_FUNCTION_ARN,
+      functionName: 'test-lambda'
     });
     done();
   });
@@ -36,13 +37,12 @@ describe('pushResultToClient', function () {
         }
       ]
     };
-    const expected = JSON.stringify({
-      default: JSON.stringify(params)
-    });
+    const expected = Object.assign({ provider: 'test-lambda' }, params);
     AwsHelper.pushResultToClient(params, function (err) {
       assert(!err);
       assert.equal(AWS.SNS.prototype.publish.callCount, 1);
-      assert.equal(AWS.SNS.prototype.publish.calls[0].args[0].Message, expected);
+      const message = JSON.parse(JSON.parse(AWS.SNS.prototype.publish.calls[0].args[0].Message).default);
+      assert.deepEqual(message, expected);
       done();
     });
   });

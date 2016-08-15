@@ -112,8 +112,22 @@ describe('pushResultToClient', function () {
       ]
     };
     AwsHelper.pushResultToClient(params, function (err, res) {
-      assert(err);
+      assert(!err);
       assert.equal(AWS.S3.prototype.upload.callCount, 0);
+      done();
+    });
+  });
+
+  it('emits sns events if there are no items', function (done) {
+    var params = {
+      id: 'dummyConnectionId', // the session id from WebSocket Server
+      searchId: 'ABC',
+      userId: 'TESTUSERID',
+      items: []
+    };
+    AwsHelper.pushResultToClient(params, function (err, res) {
+      assert(!err);
+      assert.equal(AWS.SNS.prototype.publish.callCount, 1);
       done();
     });
   });
